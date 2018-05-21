@@ -12,19 +12,19 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-    PSQL_DBNAME = ''
-    PSQL_USER = ''
+    PSQL_DBNAME = 'rrnbilling'
+    PSQL_USER = 'railroadman'
     PSQL_PASSWORD = ''
-    PSQL_HOST = ''
+    PSQL_HOST = '127.0.0.1'
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
 
-    PSQL_DBNAME = ''
-    PSQL_USER = ''
-    PSQL_PASSWORD = ''
-    PSQL_HOST = ''
+    PSQL_DBNAME = 'rrnbilling'
+    PSQL_USER = 'railroadman'
+    PSQL_PASSWORD = 'railroadman'
+    PSQL_HOST = '127.0.0.1'
 
 
 class TestingConfig(Config):
