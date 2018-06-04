@@ -1,4 +1,3 @@
-import simplejson as json
 import logging
 import sys
 from http import HTTPStatus
@@ -9,7 +8,6 @@ from flask import Response, request
 from app.exception import SubscriptionException, BillingError
 from app.model.subscription import SubscriptionDB
 from app.model.subscription.feature import FeatureDB
-from rest import APIResourceURL
 
 sys.path.insert(0, '../psql_library')
 from storage_service import DBStorageService
@@ -17,7 +15,8 @@ from storage_service import DBStorageService
 sys.path.insert(0, '../rest_api_library')
 from api import ResourceAPI
 from response import APIResponseStatus, APIResponse
-from utils import make_api_response, JSONDecimalEncoder
+from utils import make_api_response
+from rest import APIResourceURL
 
 
 class SubscriptionsAPI(ResourceAPI):
