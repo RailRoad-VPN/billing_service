@@ -62,7 +62,7 @@ class SubscriptionsAPI(ResourceAPI):
                                         developer_message=BillingError.BAD_ACCEPT_LANGUAGE_HEADER.description,
                                         error_code=BillingError.BAD_ACCEPT_LANGUAGE_HEADER.value)
 
-            return make_api_response(json.dumps(response_data.serialize()), HTTPStatus.BAD_REQUEST)
+            return make_api_response(response_data, HTTPStatus.BAD_REQUEST)
 
         subscription_db = SubscriptionDB(storage_service=self.__db_storage_service, lang_code=lang_code,
                                          limit=self.pagination.limit, offset=self.pagination.offset)
@@ -78,7 +78,7 @@ class SubscriptionsAPI(ResourceAPI):
             http_code = HTTPStatus.BAD_REQUEST
             response_data = APIResponse(status=APIResponseStatus.failed.value, code=http_code, error=error,
                                         developer_message=developer_message, error_code=error_code)
-            return make_api_response(json.dumps(response_data.serialize()), http_code)
+            return make_api_response(response_data, http_code)
 
         try:
             for subscription in subscription_list_dict:
@@ -95,12 +95,12 @@ class SubscriptionsAPI(ResourceAPI):
             http_code = HTTPStatus.BAD_REQUEST
             response_data = APIResponse(status=APIResponseStatus.failed.value, code=http_code, error=error,
                                         developer_message=developer_message, error_code=error_code)
-            return make_api_response(json.dumps(response_data.serialize()), http_code)
+            return make_api_response(response_data, http_code)
 
         response_data = APIResponse(status=APIResponseStatus.success.value, code=HTTPStatus.OK,
                                     data=subscription_list_dict, limit=self.pagination.limit,
                                     offset=self.pagination.offset)
 
-        resp = make_api_response(json.dumps(response_data.serialize()), HTTPStatus.OK)
+        resp = make_api_response(response_data, HTTPStatus.OK)
 
         return resp
