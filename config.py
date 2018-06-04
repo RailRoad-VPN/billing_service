@@ -7,11 +7,14 @@ class Config(object):
     SECRET_KEY = APP_SESSION_SK
     TEMPLATES_AUTO_RELOAD = True
 
-    VERSION = '1.0'
+    VERSION = 'v1'
     API_BASE_URI = '/api/%s' % VERSION
 
 
 class ProductionConfig(Config):
+    ENV = 'production'
+    LOG_PATH = ''
+
     PSQL_DBNAME = 'rrnbilling'
     PSQL_USER = 'railroadman'
     PSQL_PASSWORD = ''
@@ -19,6 +22,9 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
+    ENV = 'development'
+    LOG_PATH = '/Users/dikkini/Developing/workspaces/my/DFN/logs/billing'
+
     DEBUG = True
 
     PSQL_DBNAME = 'rrnbilling'
@@ -29,3 +35,6 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    ENV = 'testing'
+    LOG_PATH = '/opt/apps/dfn/logs/billing'
+

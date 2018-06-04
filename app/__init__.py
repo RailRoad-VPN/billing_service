@@ -1,29 +1,39 @@
 import logging
-from pprint import pprint
+import os
+import sys
 
 from flask import Flask
 
-from app.common.psql_helper import PostgreSQL
-from app.common.storage import DBStorageService
-from app.resources.user import UserAPI
+from subscriptions import SubscriptionsAPI
+
+sys.path.insert(0, '../psql_library')
+from psql_helper import PostgreSQL
+from storage_service import DBStorageService
+
+sys.path.insert(1, '../rest_api_library')
+from api import register_api
 
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
-# Load the default configuration
-app.config.from_object('config.DevelopmentConfig')
+# Load config based on env variable
+ENVIRONMENT_CONFIG = os.environ.get("ENVIRONMENT_CONFIG", default='DevelopmentConfig')
+logging.info("Got ENVIRONMENT_CONFIG variable: %s" % ENVIRONMENT_CONFIG)
+config_name = "%s.%s" % ('config', ENVIRONMENT_CONFIG)
+logging.info("Config name: %s" % config_name)
+app.config.from_object(config_name)
 
 with app.app_context():
     psql = PostgreSQL(app=app)
 
 db_storage_service = DBStorageService(psql=psql)
 
-# USER API
-user_api_url = '%s/%s' % (app.config['API_BASE_URI'], UserAPI.__api_url__)
-user_api_view_func = UserAPI.as_view('user_api', db_storage_service)
-app.add_url_rule(user_api_url, view_func=user_api_view_func, methods=['GET', 'POST', ])
-app.add_url_rule('%s/uuid/<string:uuid>' % user_api_url, view_func=user_api_view_func, methods=['GET', 'PUT'])
-app.add_url_rule('%s/email/<string:email>' % user_api_url, view_func=user_api_view_func, methods=['GET'])
+app_config = app.config
+api_base_uri = app_config['API_BASE_URI']
 
-pprint(app.url_map._rules_by_endpoint)
+apis = [
+    {'cls': SubscriptionsAPI, 'args': [db_storage_service, app_config]},
+]
+
+register_api(app, api_base_uri, apis)
