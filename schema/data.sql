@@ -4,18 +4,27 @@ TRUNCATE subscription_feature CASCADE;
 TRUNCATE subscription_feature_translation CASCADE;
 
 -- subscriptions (1 - FREE, 2 - STARTER, 3 - PRO, 4 - ULTIMATE
+
+-- FREE
 INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (1, 0, 0, 1, 0);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (1, 'FREE PACK', 'Try it!', NULL, 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй!', NULL, 'ru');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'FREE PACK', 'Try it for free!', NULL, NULL, 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', NULL, NULL, 'ru');
+
+-- STARTER
 INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (2, 8.69, 7.96, 12, 1);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (2, 'STARTER PACK', 'Good pack to start!!', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (2, 'Начальный ПАК', '', 'в месяц', 'ru');
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years, is_best) VALUES (3, 6.25, 6.97, 12, 1, TRUE);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (3, 'PRO PACK', 'We know what you need', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (3, 'Профессиональный ПАК', 'Мы знаем, что вам нужно', 'в месяц', 'ru');
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (4, 3.25, 4.98, 24, 2);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (4, 'ULTIMATE PACK', 'You know what you want!', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, lang_code) VALUES (4, 'Максимальный ПАК', 'Ты знаешь, что тебе нужно!', 'в месяц', 'ru');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'STARTER PACK', 'Good pack to start!', 'billed monthly', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'Начальный ПАК', 'Хорошее начало пути!', 'оплачивается ежемесячно', 'в месяц', 'ru');
+
+-- PRO
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years, is_best) VALUES (3, 6.35, 7.57, 12, 1, TRUE);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (3, 'PRO PACK', 'We know what you need', 'billed yearly', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (3, 'Профессиональный ПАК', 'Мы знаем, что вам нужно!', 'оплачивается ежегодно', 'в месяц', 'ru');
+
+
+-- ULTIMATE
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (4, 4.25, 5.35, 36, 3);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (4, 'ULTIMATE PACK', 'You know what you want!', 'billed every 3 years', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (4, 'Максимальный ПАК', 'Ты знаешь, что тебе нужно!', 'оплачивается раз в 3 года', 'в месяц', 'ru');
 
 -- ULTIMATE PACK
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (1,  4, TRUE);
@@ -145,10 +154,10 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (4
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (46, 1, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (47, 1, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (48, 1, FALSE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, 'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '10 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '10 Устройств', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, '1 Country', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, '1 Страна', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '1 Device', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '1 Устройство', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (39, 'Speed: Minimal', 'Your connection will be on Minimal speed, but you can browse internet and chatting', 'en');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (39, 'Скорость: Самая низкая', 'Скорость вашего соединегния будет Самой низкой, но вам хватит на браузер и чаты', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (40, 'No Browsing Logs Policy', 'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded', 'en');

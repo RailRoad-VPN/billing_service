@@ -103,6 +103,7 @@ class FeatureDB(FeatureStored):
                     FROM public.subscription_feature sf
                       JOIN subscription_feature_translation sft ON sf.id = sft.subscription_feature_id
                     WHERE sf.subscription_id = ? AND sft.lang_code = ?
+                    ORDER BY enabled DESC
         '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)

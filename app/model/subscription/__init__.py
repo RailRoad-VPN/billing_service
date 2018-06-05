@@ -25,12 +25,14 @@ class Subscription(object):
     _name = None
     _description = None
     _bill_freq = None
+    _price_freq = None
     _lang_code = None
 
     def __init__(self, sid: int = None, price_per_month: int = None, old_price_per_month: int = None,
                  billed_period_in_months: int = None, billed_period_in_years: int = None, is_best: bool = None,
                  modify_date: datetime = None, modify_reason: str = None, created_date: datetime = None,
-                 name: str = None, description: str = None, bill_freq: str = None, lang_code: str = None):
+                 name: str = None, description: str = None, bill_freq: str = None, price_freq: str = None,
+                 lang_code: str = None):
         self._sid = sid
         self._price_per_month = price_per_month
         self._old_price_per_month = old_price_per_month
@@ -43,6 +45,7 @@ class Subscription(object):
         self._name = name
         self._description = description
         self._bill_freq = bill_freq
+        self._price_freq = price_freq
         self._lang_code = lang_code
 
     def to_dict(self):
@@ -59,6 +62,7 @@ class Subscription(object):
             'name': self._name,
             'description': self._description,
             'bill_freq': self._bill_freq,
+            'price_freq': self._price_freq,
             'lang_code': self._lang_code,
         }
 
@@ -73,6 +77,7 @@ class Subscription(object):
             'name': self._name,
             'description': self._description,
             'bill_freq': self._bill_freq,
+            'price_freq': self._price_freq,
         }
 
 
@@ -83,13 +88,13 @@ class SubscriptionStored(StoredObject, Subscription):
                  old_price_per_month: int = None, billed_period_in_months: int = None,
                  billed_period_in_years: int = None, is_best: bool = None, modify_date: datetime = None,
                  modify_reason: str = None, created_date: datetime = None, name: str = None, description: str = None,
-                 bill_freq: str = None, lang_code: str = None, limit: int = None, offset: int = None, **kwargs):
+                 bill_freq: str = None, price_freq: str = None, lang_code: str = None, limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
         Subscription.__init__(self, sid=sid, price_per_month=price_per_month, old_price_per_month=old_price_per_month,
                               billed_period_in_months=billed_period_in_months,
                               billed_period_in_years=billed_period_in_years, is_best=is_best, modify_date=modify_date,
                               modify_reason=modify_reason, created_date=created_date, name=name,
-                              description=description, bill_freq=bill_freq, lang_code=lang_code)
+                              description=description, bill_freq=bill_freq, price_freq=price_freq, lang_code=lang_code)
 
 
 class SubscriptionDB(SubscriptionStored):
@@ -107,6 +112,7 @@ class SubscriptionDB(SubscriptionStored):
     _name_field = 'name'
     _description_field = 'description'
     _bill_freq_field = 'bill_freq'
+    _price_freq_field = 'price_freq'
     _lang_code_field = 'lang_code'
 
     def __init__(self, storage_service: StorageService, **kwargs):
@@ -128,6 +134,7 @@ class SubscriptionDB(SubscriptionStored):
                       st.name                   AS name,
                       st.description            AS description,
                       st.bill_freq              AS bill_freq,
+                      st.price_freq              AS price_freq,
                       st.lang_code              AS lang_code
                     FROM public.subscription s
                       JOIN public.subscription_translation st ON s.id = st.subscription_id
@@ -170,5 +177,6 @@ class SubscriptionDB(SubscriptionStored):
             name=subscription_db[self._name_field],
             description=subscription_db[self._description_field],
             bill_freq=subscription_db[self._bill_freq_field],
+            price_freq=subscription_db[self._price_freq_field],
             lang_code=subscription_db[self._lang_code_field],
         )

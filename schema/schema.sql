@@ -42,6 +42,7 @@ CREATE TABLE public.subscription_translation
   , name VARCHAR(200) NOT NULL
   , description VARCHAR(200) NOT NULL
   , bill_freq VARCHAR(200)
+  , price_freq VARCHAR(200)
   , lang_code CHAR(2)
 );
 
