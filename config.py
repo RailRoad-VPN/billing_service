@@ -23,7 +23,6 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     ENV = 'development'
-    LOG_PATH = '/Users/dikkini/Developing/workspaces/my/DFN/logs/billing'
 
     DEBUG = True
 
@@ -36,5 +35,9 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     ENV = 'testing'
-    LOG_PATH = '/opt/apps/dfn/logs/billing'
+
+    PSQL_DBNAME = 'rrnbilling'
+    PSQL_USER = 'railroadman'
+    PSQL_PASSWORD = 'railroadman'
+    PSQL_HOST = '127.0.0.1'
 
