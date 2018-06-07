@@ -114,8 +114,8 @@ class FeatureDB(FeatureStored):
             feature_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
-            error_message = BillingError.FEATURE_FIND_ERROR_DB.phrase
-            error_code = BillingError.FEATURE_FIND_ERROR_DB.value
+            error_message = BillingError.FEATURE_FIND_ERROR_DB.message
+            error_code = BillingError.FEATURE_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
                                     BillingError.FEATURE_FIND_ERROR_DB.description, e.pgcode, e.pgerror)

@@ -5,6 +5,7 @@ import sys
 from flask import Flask
 
 from app.resources.subscriptions import SubscriptionsAPI
+from user_subscriptions import UserSubscriptionsAPI
 
 sys.path.insert(0, '../psql_library')
 from psql_helper import PostgreSQL
@@ -34,6 +35,7 @@ api_base_uri = app_config['API_BASE_URI']
 
 apis = [
     {'cls': SubscriptionsAPI, 'args': [db_storage_service, app_config]},
+    {'cls': UserSubscriptionsAPI, 'args': [db_storage_service, app_config]},
 ]
 
 register_api(app, api_base_uri, apis)

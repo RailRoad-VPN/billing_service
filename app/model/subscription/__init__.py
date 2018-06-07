@@ -88,7 +88,8 @@ class SubscriptionStored(StoredObject, Subscription):
                  old_price_per_month: int = None, billed_period_in_months: int = None,
                  billed_period_in_years: int = None, is_best: bool = None, modify_date: datetime = None,
                  modify_reason: str = None, created_date: datetime = None, name: str = None, description: str = None,
-                 bill_freq: str = None, price_freq: str = None, lang_code: str = None, limit: int = None, offset: int = None, **kwargs):
+                 bill_freq: str = None, price_freq: str = None, lang_code: str = None, limit: int = None,
+                 offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
         Subscription.__init__(self, sid=sid, price_per_month=price_per_month, old_price_per_month=old_price_per_month,
                               billed_period_in_months=billed_period_in_months,
@@ -149,8 +150,8 @@ class SubscriptionDB(SubscriptionStored):
             subscription_list_db = self._storage_service.get(sql=select_sql, data=select_params)
         except DatabaseError as e:
             logging.error(e)
-            error_message = BillingError.SUBSCRIPTION_FIND_ERROR_DB.phrase
-            error_code = BillingError.SUBSCRIPTION_FIND_ERROR_DB.value
+            error_message = BillingError.SUBSCRIPTION_FIND_ERROR_DB.message
+            error_code = BillingError.SUBSCRIPTION_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
                                     BillingError.SUBSCRIPTION_FIND_ERROR_DB.description, e.pgcode, e.pgerror)
@@ -162,6 +163,45 @@ class SubscriptionDB(SubscriptionStored):
             subscription_list.append(subscription)
 
         return subscription_list
+
+    def find_by_id(self):
+        logging.info('SubscriptionDB find_by_id method')
+        select_sql = '''
+                    SELECT
+                      s.id                      AS id,
+                      s.price_per_month         AS price_per_month,
+                      s.old_price_per_month     AS old_price_per_month,
+                      s.billed_period_in_months AS billed_period_in_months,
+                      s.billed_period_in_years  AS billed_period_in_years,
+                      s.is_best                 AS is_best,
+                      s.modify_date             AS modify_date,
+                      s.modify_reason           AS modify_reason,
+                      s.created_date            AS created_date,
+                      st.name                   AS name,
+                      st.description            AS description,
+                      st.bill_freq              AS bill_freq,
+                      st.price_freq              AS price_freq,
+                      st.lang_code              AS lang_code
+                    FROM public.subscription s
+                      JOIN public.subscription_translation st ON s.id = st.subscription_id
+                    WHERE s.id = ?
+        '''
+
+        logging.debug('Select SQL: %s' % select_sql)
+        select_params = (self._sid,)
+        try:
+            logging.debug('Call database service')
+            subscription_db = self._storage_service.get(sql=select_sql, data=select_params)
+        except DatabaseError as e:
+            logging.error(e)
+            error_message = BillingError.SUBSCRIPTION_FIND_ERROR_DB.message
+            error_code = BillingError.SUBSCRIPTION_FIND_ERROR_DB.code
+            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+                                "Code: %s . %s" % (
+                                    BillingError.SUBSCRIPTION_FIND_ERROR_DB.description, e.pgcode, e.pgerror)
+            raise SubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
+
+        return self.__mapsubscriptiondb_to_subscription(subscription_db=subscription_db)
 
     def __mapsubscriptiondb_to_subscription(self, subscription_db):
         return Subscription(
