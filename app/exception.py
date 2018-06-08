@@ -30,19 +30,34 @@ class BillingError(Enum):
 
     REQUEST_NO_JSON = (name + str(count()), 'REQUEST_NO_JSON phrase', 'REQUEST_NO_JSON description')
 
-    SUBSCRIPTION_FIND_ERROR_DB = (
-    name + str(count()), 'SUBSCRIPTION_FIND_ERROR_DB phrase', 'SUBSCRIPTION_FIND_ERROR_DB description')
+    SUBSCRIPTION_FIND_ERROR_DB = (name + str(count()), 'SUBSCRIPTION_FIND_ERROR_DB phrase', 'SUBSCRIPTION_FIND_ERROR_DB description')
     FEATURE_FIND_ERROR_DB = (name + str(count()), 'FEATURE_FIND_ERROR_DB phrase', 'FEATURE_FIND_ERROR_DB description')
-    USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB phrase',
-                                             'USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB description')
-    USER_SUBSCRIPTION_FINDBYUUID_ERROR = (
-    name + str(count()), 'USER_SUBSCRIPTION_FINDBYUUID_ERROR phrase', 'USER_SUBSCRIPTION_FINDBYUUID_ERROR description')
+    USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB phrase', 'USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB description')
+    USER_SUBSCRIPTION_FINDBYUUID_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_FINDBYUUID_ERROR phrase', 'USER_SUBSCRIPTION_FINDBYUUID_ERROR description')
 
-    BAD_ACCEPT_LANGUAGE_HEADER = (
-    name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
+    PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB description')
+    PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR description')
+    PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB description')
+    PPG_PAYMENT_FIND_BY_ORDERID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR description')
+
+    BAD_ACCEPT_LANGUAGE_HEADER = (name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
 
 
 class BillingException(Exception):
+    __version__ = 1
+
+    error = None
+    error_code = None
+    developer_message = None
+
+    def __init__(self, error: str, error_code: int, developer_message: str = None, *args):
+        super().__init__(*args)
+        self.error = error
+        self.error_code = error_code
+        self.developer_message = developer_message
+
+
+class BillingNotFoundException(Exception):
     __version__ = 1
 
     error = None
