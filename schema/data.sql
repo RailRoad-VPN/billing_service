@@ -1,4 +1,4 @@
-TRUNCATE subscription CASCADE;
+TRUNCATE subscription  CASCADE;
 TRUNCATE subscription_translation CASCADE;
 TRUNCATE subscription_feature CASCADE;
 TRUNCATE subscription_feature_translation CASCADE;
@@ -6,106 +6,63 @@ TRUNCATE subscription_feature_translation CASCADE;
 -- subscriptions (1 - FREE, 2 - STARTER, 3 - PRO, 4 - ULTIMATE
 
 -- FREE
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years)
-VALUES (1, 0, 0, 1, 0);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (1, 'FREE PACK', 'Try it for free!', NULL, NULL, 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', NULL, NULL, 'ru');
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (1, 0, 0, 1, 0);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'FREE PACK', 'Try it for free!', NULL, NULL, 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', NULL, NULL, 'ru');
 
 -- STARTER
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years)
-VALUES (2, 8.69, 7.96, 12, 1);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (2, 'STARTER PACK', 'Good pack to start!', 'billed monthly', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (2, 'Начальный ПАК', 'Хорошее начало пути!', 'оплачивается ежемесячно', 'в месяц', 'ru');
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (2, 8.69, 7.96, 12, 1);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'STARTER PACK', 'Good pack to start!', 'billed monthly', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'Начальный ПАК', 'Хорошее начало пути!', 'оплачивается ежемесячно', 'в месяц', 'ru');
 
 -- PRO
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years, is_best)
-VALUES (3, 6.35, 7.57, 12, 1, TRUE);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (3, 'PRO PACK', 'We know what you need', 'billed yearly', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (3, 'Профессиональный ПАК', 'Мы знаем, что вам нужно!', 'оплачивается ежегодно', 'в месяц', 'ru');
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years, is_best) VALUES (3, 6.35, 7.57, 12, 1, TRUE);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (3, 'PRO PACK', 'We know what you need', 'billed yearly', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (3, 'Профессиональный ПАК', 'Мы знаем, что вам нужно!', 'оплачивается ежегодно', 'в месяц', 'ru');
+
 
 -- ULTIMATE
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years)
-VALUES (4, 4.25, 5.35, 36, 3);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (4, 'ULTIMATE PACK', 'You know what you want!', 'billed every 3 years', 'per month', 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code)
-VALUES (4, 'Максимальный ПАК', 'Ты знаешь, что тебе нужно!', 'оплачивается раз в 3 года', 'в месяц', 'ru');
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (4, 4.25, 5.35, 36, 3);
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (4, 'ULTIMATE PACK', 'You know what you want!', 'billed every 3 years', 'per month', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (4, 'Максимальный ПАК', 'Ты знаешь, что тебе нужно!', 'оплачивается раз в 3 года', 'в месяц', 'ru');
 
 -- ULTIMATE PACK
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (1, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (2, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (3, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (4, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (5, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (6, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (7, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (8, 4, TRUE);
-INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (9, 4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (1,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (2,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (3,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (4,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (5,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (6,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (7,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (8,  4, TRUE);
+INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (9,  4, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (10, 4, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (11, 4, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (12, 4, TRUE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (1, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (1, 'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (2, '10 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (2, '10 Устройств',
-   'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (3, 'Speed: Highest', 'Your connection will be on Highest speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (3, 'Скорость: Максимальная', 'Скорость вашего соединегния будет Максимальной', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (4, 'No Browsing Logs Policy',
-   'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded',
-   'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (4, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (5, 'Virus Protection', NULL, 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (5, 'Защита от Вирусов', NULL, 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (6, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (6, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд',
-   'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (7, 'Full support', 'Write us any time with any problem about Railroad Network', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (7, 'Полная поддержка', 'Пиши нам в любое время по любой проблеме о работае сервиса Railroad Network', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (8, 'Military Grade 256-Bit Encryption',
-   'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (8, 'Военный стандарт 256 битного шифрования',
-   'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (9, 'Advanced IPSec & IKEv2 protocols',
-   'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (9, 'Продвинутые IPSec & IKEv2 прокотолы',
-   'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (10, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (10, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (11, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (11, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (12, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (12, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (1,  'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (1,  'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (2,  '10 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (2,  '10 Устройств', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (3,  'Speed: Highest', 'Your connection will be on Highest speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (3,  'Скорость: Максимальная', 'Скорость вашего соединегния будет Максимальной', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (4,  'No Browsing Logs Policy', 'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (4,  'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (5,  'Virus Protection', NULL, 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (5,  'Защита от Вирусов', NULL, 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (6,  'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (6,  'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (7,  'Full support', 'Write us any time with any problem about Railroad Network', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (7,  'Полная поддержка', 'Пиши нам в любое время по любой проблеме о работае сервиса Railroad Network', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (8,  'Military Grade 256-Bit Encryption', 'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (8,  'Военный стандарт 256 битного шифрования', 'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (9,  'Advanced IPSec & IKEv2 protocols', 'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (9,  'Продвинутые IPSec & IKEv2 прокотолы', 'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (10, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (10, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (11, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (11, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (12, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (12, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
 
 -- PRO PACK
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (13, 3, TRUE);
@@ -120,62 +77,30 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (2
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (22, 3, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (23, 3, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (24, 3, TRUE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (13, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (13, 'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (14, '5 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (14, '5 Устройств',
-   'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (15, 'Speed: High', 'Your connection will be on High speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (15, 'Скорость: Высокая', 'Скорость вашего соединегния будет Высокой', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (16, 'No Browsing Logs Policy',
-   'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded',
-   'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (16, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (17, 'Virus Protection', NULL, 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (17, 'Защита от Вирусов', NULL, 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (18, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (18, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд',
-   'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (19, 'Full support', 'Write us any time with any problem about Railroad Network', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (19, 'Полная поддержка', 'Пиши нам в любое время по любой проблеме о работае сервиса Railroad Network', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (20, 'Military Grade 256-Bit Encryption',
-   'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (20, 'Военный стандарт 256 битного шифрования',
-   'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (21, 'Advanced IPSec & IKEv2 protocols',
-   'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (21, 'Продвинутые IPSec & IKEv2 прокотолы',
-   'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (22, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (22, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (23, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (23, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (24, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (24, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (13, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (13, 'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (14, '5 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (14, '5 Устройств', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (15, 'Speed: High', 'Your connection will be on High speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (15, 'Скорость: Высокая', 'Скорость вашего соединегния будет Высокой', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (16, 'No Browsing Logs Policy', 'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (16, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (17, 'Virus Protection', NULL, 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (17, 'Защита от Вирусов', NULL, 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (18, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (18, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (19, 'Full support', 'Write us any time with any problem about Railroad Network', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (19, 'Полная поддержка', 'Пиши нам в любое время по любой проблеме о работае сервиса Railroad Network', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (20, 'Military Grade 256-Bit Encryption', 'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (20, 'Военный стандарт 256 битного шифрования', 'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (21, 'Advanced IPSec & IKEv2 protocols', 'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (21, 'Продвинутые IPSec & IKEv2 прокотолы', 'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (22, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (22, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (23, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (23, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (24, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (24, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
 
 -- STARTER PACK
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (25, 2, TRUE);
@@ -190,62 +115,31 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (3
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (34, 2, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (35, 2, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (36, 2, FALSE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (25, '3 Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (25, '3 Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (26, '3 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (26, '3 Устройства',
-   'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (27, 'Speed: Low', 'Your connection will be on Low speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (27, 'Скорость: Низкая', 'Скорость вашего соединегния будет Низкой', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (28, 'No Browsing Logs Policy',
-   'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded',
-   'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (28, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (29, 'Virus Protection', NULL, 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (29, 'Защита от Вирусов', NULL, 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (30, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (30, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд',
-   'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (31, 'Limited support', 'Write an email or forum post about your problems, we will help, may be', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (31, 'Ограниченная поддержка', 'Пиши на почту и на форум о всех своих проблемах. Как-чего - мы починим.', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (32, 'Military Grade 256-Bit Encryption',
-   'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (32, 'Военный стандарт 256 битного шифрования',
-   'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (33, 'Advanced IPSec & IKEv2 protocols',
-   'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (33, 'Продвинутые IPSec & IKEv2 прокотолы',
-   'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (34, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (34, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (35, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (35, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (36, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (36, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, '3 Countries', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, '3 Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (26, '3 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (26, '3 Устройства', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (27, 'Speed: Low', 'Your connection will be on Low speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (27, 'Скорость: Низкая', 'Скорость вашего соединегния будет Низкой', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (28, 'No Browsing Logs Policy', 'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (28, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (29, 'Virus Protection', NULL, 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (29, 'Защита от Вирусов', NULL, 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (30, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (30, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (31, 'Limited support', 'Write an email or forum post about your problems, we will help, may be', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (31, 'Ограниченная поддержка', 'Пиши на почту и на форум о всех своих проблемах. Как-чего - мы починим.', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (32, 'Military Grade 256-Bit Encryption', 'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (32, 'Военный стандарт 256 битного шифрования', 'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (33, 'Advanced IPSec & IKEv2 protocols', 'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (33, 'Продвинутые IPSec & IKEv2 прокотолы', 'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (34, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (34, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (35, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (35, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (36, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (36, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
+
 
 -- FREE PACK
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (37, 1, TRUE);
@@ -260,60 +154,27 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (4
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (46, 1, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (47, 1, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (48, 1, FALSE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (37, '1 Country', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (37, '1 Страна', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (38, '1 Device', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (38, '1 Устройство',
-   'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (39, 'Speed: Minimal', 'Your connection will be on Minimal speed, but you can browse internet and chatting', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (39, 'Скорость: Самая низкая', 'Скорость вашего соединегния будет Самой низкой, но вам хватит на браузер и чаты',
-   'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (40, 'No Browsing Logs Policy',
-   'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded',
-   'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (40, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (41, 'Virus Protection', NULL, 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (41, 'Защита от Вирусов', NULL, 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (42, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (42, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд',
-   'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (43, 'No support', NULL, 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (43, 'Нет поддержки', NULL, 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (44, 'Military Grade 256-Bit Encryption',
-   'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (44, 'Военный стандарт 256 битного шифрования',
-   'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (45, 'Advanced IPSec & IKEv2 protocols',
-   'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES
-  (45, 'Продвинутые IPSec & IKEv2 прокотолы',
-   'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (46, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (46, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (47, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (47, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (48, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code)
-VALUES (48, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, '1 Country', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (37, '1 Страна', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '1 Device', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (38, '1 Устройство', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (39, 'Speed: Minimal', 'Your connection will be on Minimal speed, but you can browse internet and chatting', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (39, 'Скорость: Самая низкая', 'Скорость вашего соединегния будет Самой низкой, но вам хватит на браузер и чаты', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (40, 'No Browsing Logs Policy', 'We do not collect logs about your connection, which means you can browse the internet without any worry of being recorded', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (40, 'Нет браузерной истории логов', 'Мы не собираем никакой информации о вашем подключении и трафике', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (41, 'Virus Protection', NULL, 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (41, 'Защита от Вирусов', NULL, 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (42, 'Fast Connect', 'VPN client connects automatically to the fastest server available within few seconds', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (42, 'Моментальное соединение', 'Наш VPN клиент автоматически соединяется с быстрейшим сервером за несколько секунд', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (43, 'No support', NULL, 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (43, 'Нет поддержки', NULL, 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (44, 'Military Grade 256-Bit Encryption', 'Our servers use advanced 256-bit encryption to offer best protection for you', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (44, 'Военный стандарт 256 битного шифрования', 'Наши сервера используют продвинутое 256 битное шифрование, чтобы предложить вам наилучшую защиту', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (45, 'Advanced IPSec & IKEv2 protocols', 'We support multiple VPN security protocols for you to choose from to fulfill your needs and requirements', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (45, 'Продвинутые IPSec & IKEv2 прокотолы', 'Мы поддерживаем несколько VPN протоколов безопасности, чтобы Вы могли выбрать подходящий для себя', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (46, 'Service +', 'Servers only available to VIP users with the highest speed', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (46, 'Сервис +', 'Сервера доступны только для VIP пользователей на максимальной скорости', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (47, 'Streaming Services', 'Watch Netflix, Twitch and Youtube', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (47, 'Стриминговые сервисы', 'Смотрите Ivi, Twitch, Youtube', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (48, 'Torrents and P2P', 'User P2P services, download torrents without restricts or limits ', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (48, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');

@@ -5,7 +5,7 @@ import sys
 from flask import Flask
 
 from app.resources.subscriptions import SubscriptionsAPI
-from user_subscriptions import UserSubscriptionsAPI
+from app.resources.user_subscriptions import UserSubscriptionsAPI
 
 sys.path.insert(0, '../psql_library')
 from psql_helper import PostgreSQL
