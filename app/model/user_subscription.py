@@ -92,7 +92,8 @@ class UserSubscriptionDB(UserSubscriptionStored):
             error_code = BillingError.USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.USER_SUBSCRIPTION_FINDBYUUID_ERROR_DB.developer_message, e.pgcode,
+                                    e.pgerror)
             raise UserSubscriptionException(error=error_message, error_code=error_code,
                                             developer_message=developer_message)
 

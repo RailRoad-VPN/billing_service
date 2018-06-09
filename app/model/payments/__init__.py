@@ -1,7 +1,6 @@
 import datetime
-import sys
-
 import logging
+import sys
 
 from psycopg2._psycopg import DatabaseError
 

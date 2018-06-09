@@ -40,4 +40,3 @@ class TestingConfig(Config):
     PSQL_USER = 'railroadman'
     PSQL_PASSWORD = 'railroadman'
     PSQL_HOST = '127.0.0.1'
-
