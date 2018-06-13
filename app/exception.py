@@ -46,10 +46,13 @@ class BillingError(APIErrorEnum):
 
     ORDER_CREATE_ERROR_DB = (name + str(count()), 'ORDER_CREATE_ERROR_DB phrase', 'ORDER_CREATE_ERROR_DB description')
     ORDER_UPDATE_ERROR_DB = (name + str(count()), 'ORDER_UPDATE_ERROR_DB phrase', 'ORDER_UPDATE_ERROR_DB description')
-    ORDER_FIND_BY_ID_ERROR_DB = (name + str(count()), 'ORDER_FIND_BY_ID_ERROR_DB phrase', 'ORDER_FIND_BY_ID_ERROR_DB description')
-    ORDER_FIND_BY_ID_ERROR = (name + str(count()), 'ORDER_FIND_BY_ID_ERROR phrase', 'ORDER_FIND_BY_ID_ERROR description')
+    ORDER_FIND_BY_CODE_ERROR = (name + str(count()), 'ORDER_FIND_BY_CODE_ERROR phrase', 'ORDER_FIND_BY_CODE_ERROR description')
+    ORDER_FIND_BY_CODE_ERROR_DB = (name + str(count()), 'ORDER_FIND_BY_CODE_ERROR_DB phrase', 'ORDER_FIND_BY_CODE_ERROR_DB description')
+    ORDER_FIND_BY_UUID_ERROR_DB = (name + str(count()), 'ORDER_FIND_BY_ID_ERROR_DB phrase', 'ORDER_FIND_BY_ID_ERROR_DB description')
+    ORDER_FIND_BY_UUID_ERROR = (name + str(count()), 'ORDER_FIND_BY_ID_ERROR phrase', 'ORDER_FIND_BY_ID_ERROR description')
     ORDER_FIND_ERROR_DB = (name + str(count()), 'ORDER_FIND_ERROR_DB phrase', 'ORDER_FIND_ERROR_DB description')
     ORDER_IDENTIFIER_ERROR = (name + str(count()), 'ORDER_IDENTIFIER_ERROR phrase', 'ORDER_IDENTIFIER_ERROR description')
+    ORDER_UPDATE_IDENTIFIER_ERROR = (name + str(count()), 'ORDER_UPDATE_IDENTIFIER_ERROR phrase', 'ORDER_UPDATE_IDENTIFIER_ERROR description')
 
     BAD_ACCEPT_LANGUAGE_HEADER = (name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
 

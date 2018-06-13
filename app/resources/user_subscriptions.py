@@ -61,7 +61,7 @@ class UserSubscriptionsAPI(ResourceAPI):
             return make_error_request_response(HTTPStatus.BAD_REQUEST)
 
         if not is_valid:
-            return make_error_request_response(HTTPStatus.BAD_REQUEST, error=BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR)
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR)
 
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, suuid=suuid,
                                                   user_uuid=user_uuid, limit=self.pagination.limit,

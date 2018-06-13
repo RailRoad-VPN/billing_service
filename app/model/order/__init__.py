@@ -105,7 +105,8 @@ class OrderDB(OrderStored):
             error_message = BillingError.ORDER_FIND_ERROR_DB.message
             error_code = BillingError.ORDER_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
-                                "Code: %s . %s" % (BillingError.ORDER_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                "Code: %s . %s" % (
+                                BillingError.ORDER_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
         order_list = []
 
@@ -114,6 +115,53 @@ class OrderDB(OrderStored):
             order_list.append(order)
 
         return order_list
+
+    def find_by_code(self):
+        logging.info('OrderDB find_by_code method')
+        select_sql = '''
+                    SELECT
+                        o.uuid AS uuid,
+                        o.code AS code,
+                        o.status_id AS status_id,
+                        o.payment_uuid AS payment_uuid,
+                        o.modify_reason AS modify_reason,
+                        to_json(o.modify_date) AS modify_date,
+                        to_json(o.created_date) AS created_date
+                    FROM public.order o
+                    WHERE o.code = ?
+        '''
+        logging.debug('Select SQL: %s' % select_sql)
+        params = (
+            self._code,
+        )
+        try:
+            logging.debug('Call database service')
+            order_list_db = self._storage_service.get(sql=select_sql, data=params)
+        except DatabaseError as e:
+            logging.error(e)
+            error_message = BillingError.ORDER_FIND_BY_CODE_ERROR_DB.message
+            error_code = BillingError.ORDER_FIND_BY_CODE_ERROR_DB.code
+            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+                                "Code: %s . %s" % (
+                                    BillingError.ORDER_FIND_BY_CODE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+            raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
+
+        if len(order_list_db) == 1:
+            order_db = order_list_db[0]
+        elif len(order_list_db) == 0:
+            error_message = BillingError.ORDER_FIND_BY_CODE_ERROR.message
+            error_code = BillingError.ORDER_FIND_BY_CODE_ERROR.code
+            developer_message = BillingError.ORDER_FIND_BY_CODE_ERROR.developer_message
+            raise OrderNotFoundException(error=error_message, error_code=error_code,
+                                         developer_message=developer_message)
+        else:
+            error_message = BillingError.ORDER_FIND_BY_CODE_ERROR.message
+            developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
+                                "really bad with database." % BillingError.ORDER_FIND_BY_CODE_ERROR.developer_message
+            error_code = BillingError.ORDER_FIND_BY_CODE_ERROR.code
+            raise OrderException(message=error_message, code=error_code, developer_message=developer_message)
+
+        return self.__map_orderdb_to_order(order_db=order_db)
 
     def find_by_suuid(self):
         logging.info('OrderDB find_by_uuid method')
@@ -138,26 +186,26 @@ class OrderDB(OrderStored):
             order_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
-            error_message = BillingError.ORDER_FIND_BY_ID_ERROR_DB.message
-            error_code = BillingError.ORDER_FIND_BY_ID_ERROR_DB.code
+            error_message = BillingError.ORDER_FIND_BY_UUID_ERROR_DB.message
+            error_code = BillingError.ORDER_FIND_BY_UUID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.ORDER_FIND_BY_ID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.ORDER_FIND_BY_UUID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         if len(order_list_db) == 1:
             order_db = order_list_db[0]
         elif len(order_list_db) == 0:
-            error_message = BillingError.ORDER_FIND_BY_ID_ERROR.message
-            error_code = BillingError.ORDER_FIND_BY_ID_ERROR.code
-            developer_message = BillingError.ORDER_FIND_BY_ID_ERROR.developer_message
+            error_message = BillingError.ORDER_FIND_BY_UUID_ERROR.message
+            error_code = BillingError.ORDER_FIND_BY_UUID_ERROR.code
+            developer_message = BillingError.ORDER_FIND_BY_UUID_ERROR.developer_message
             raise OrderNotFoundException(error=error_message, error_code=error_code,
                                          developer_message=developer_message)
         else:
-            error_message = BillingError.ORDER_FIND_BY_ID_ERROR.message
+            error_message = BillingError.ORDER_FIND_BY_UUID_ERROR.message
             developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
-                                "really bad with database." % BillingError.ORDER_FIND_BY_ID_ERROR.developer_message
-            error_code = BillingError.ORDER_FIND_BY_ID_ERROR.code
+                                "really bad with database." % BillingError.ORDER_FIND_BY_UUID_ERROR.developer_message
+            error_code = BillingError.ORDER_FIND_BY_UUID_ERROR.code
             raise OrderException(message=error_message, code=error_code, developer_message=developer_message)
 
         return self.__map_orderdb_to_order(order_db=order_db)
@@ -180,7 +228,8 @@ class OrderDB(OrderStored):
 
         try:
             logging.debug('Call database service')
-            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._suuid_field]
+            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][
+                self._suuid_field]
         except DatabaseError as e:
             self._storage_service.rollback()
             logging.error(e)
@@ -205,23 +254,18 @@ class OrderDB(OrderStored):
         update_sql = '''
                     UPDATE public.order 
                     SET
-                        code = ?,
                         status_id = ?,
                         payment_uuid = ?,
-                        modify_reason = ?,
-                        modify_date = ?
-                    WHERE 
-                        uuid = ?
+                        modify_reason = ?
+                    WHERE uuid = ?
                     '''
 
         logging.debug('Update SQL: %s' % update_sql)
 
         update_params = (
-            self._code,
             self._status_id,
             self._payment_uuid,
             self._modify_reason,
-            self._modify_date,
             self._suuid,
         )
 

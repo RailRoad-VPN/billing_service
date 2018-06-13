@@ -56,7 +56,7 @@ class SubscriptionsAPI(ResourceAPI):
         lang_code = request.headers.get('Accept-Language', None)
 
         if lang_code is None:
-            return make_error_request_response(HTTPStatus.BAD_REQUEST, error=BillingError.BAD_ACCEPT_LANGUAGE_HEADER)
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.BAD_ACCEPT_LANGUAGE_HEADER)
 
         subscription_db = SubscriptionDB(storage_service=self.__db_storage_service, lang_code=lang_code,
                                          limit=self.pagination.limit, offset=self.pagination.offset)
