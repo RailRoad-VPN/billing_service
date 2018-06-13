@@ -36,11 +36,11 @@ class UserSubscription(object):
 
     def to_dict(self):
         return {
-            'uuid': self._suuid,
-            'user_uuid': self._user_uuid,
+            'uuid': str(self._suuid),
+            'user_uuid': str(self._user_uuid),
             'subscription_id': self._subscription_id,
             'expire_date': self._expire_date,
-            'order_uuid': self._order_uuid,
+            'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
             'modify_reason': self._modify_reason,
             'created_date': self._created_date,
@@ -52,7 +52,7 @@ class UserSubscription(object):
             'user_uuid': str(self._user_uuid),
             'subscription_id': self._subscription_id,
             'expire_date': self._expire_date,
-            'order_uuid': self._order_uuid,
+            'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
             'modify_reason': self._modify_reason,
             'created_date': self._created_date,
@@ -168,24 +168,12 @@ class UserSubscriptionDB(UserSubscriptionStored):
             raise UserSubscriptionException(error=error_message, error_code=error_code,
                                             developer_message=developer_message)
 
-        if len(user_subscription_list_db) == 1:
-            user_subscription_db = user_subscription_list_db[0]
-        elif len(user_subscription_list_db) == 0:
-            error_message = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.message
-            error_code = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.code
-            developer_message = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.developer_message
-            raise UserSubscriptionNotFoundException(error=error_message, error_code=error_code,
-                                                    developer_message=developer_message)
-        else:
-            error_message = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.message
-            developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
-                                "really bad with database." % \
-                                BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.developer_message
-            error_code = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR.code
-            raise UserSubscriptionException(error=error_message, error_code=error_code,
-                                            developer_message=developer_message)
+        user_subscription_list = []
+        for user_subscription_db in user_subscription_list_db:
+            user_subscription = self.__map_user_subscriptiondb_to_user_subscription(user_subscription_db=user_subscription_db)
+            user_subscription_list.append(user_subscription)
 
-        return self.__map_user_subscriptiondb_to_user_subscription(user_subscription_db=user_subscription_db)
+        return user_subscription_list
 
     def create(self):
         logging.info('UserSubscriptionDB create method')

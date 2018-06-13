@@ -27,8 +27,8 @@ class BillingError(APIErrorEnum):
         return obj
 
     UNKNOWN_ERROR_CODE = (name + str(count()), 'UNKNOWN_ERROR_CODE phrase', 'UNKNOWN_ERROR_CODE description')
-
     REQUEST_NO_JSON = (name + str(count()), 'REQUEST_NO_JSON phrase', 'REQUEST_NO_JSON description')
+    BAD_IDENTITY_ERROR = (name + str(count()), 'BAD_IDENTITY_ERROR phrase', 'BAD_IDENTITY_ERROR description')
 
     SUBSCRIPTION_FIND_ERROR_DB = (name + str(count()), 'SUBSCRIPTION_FIND_ERROR_DB phrase', 'SUBSCRIPTION_FIND_ERROR_DB description')
 
@@ -38,6 +38,7 @@ class BillingError(APIErrorEnum):
     USER_SUBSCRIPTION_FIND_BY_UUID_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR phrase', 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR description')
     USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB phrase', 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB description')
     USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR phrase', 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR description')
+    USER_SUBSCRIPTION_NOT_FOUND_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_NOT_FOUND_ERROR phrase', 'USER_SUBSCRIPTION_NOT_FOUND_ERROR description')
 
     PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB description')
     PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR description')
@@ -53,6 +54,8 @@ class BillingError(APIErrorEnum):
     ORDER_FIND_ERROR_DB = (name + str(count()), 'ORDER_FIND_ERROR_DB phrase', 'ORDER_FIND_ERROR_DB description')
     ORDER_IDENTIFIER_ERROR = (name + str(count()), 'ORDER_IDENTIFIER_ERROR phrase', 'ORDER_IDENTIFIER_ERROR description')
     ORDER_UPDATE_IDENTIFIER_ERROR = (name + str(count()), 'ORDER_UPDATE_IDENTIFIER_ERROR phrase', 'ORDER_UPDATE_IDENTIFIER_ERROR description')
+    ORDER_CREATE_CODE_EXIST_ERROR = (name + str(count()), 'ORDER_CREATE_CODE_EXIST_ERROR phrase', 'ORDER_CREATE_CODE_EXIST_ERROR description')
+    ORDER_UPDATE_CODE_EXIST_ERROR = (name + str(count()), 'ORDER_UPDATE_CODE_EXIST_ERROR phrase', 'ORDER_UPDATE_CODE_EXIST_ERROR description')
 
     BAD_ACCEPT_LANGUAGE_HEADER = (name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
 

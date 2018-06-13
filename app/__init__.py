@@ -8,7 +8,7 @@ from flask import Flask, request
 from app.resources.orders import OrdersAPI
 from app.resources.payments import PaymentsAPI
 from app.resources.subscriptions import SubscriptionsAPI
-from app.resources.user_subscriptions import UserSubscriptionsAPI
+from app.resources.users.subscriptions import UserSubscriptionsAPI
 
 sys.path.insert(0, '../psql_library')
 from psql_helper import PostgreSQL

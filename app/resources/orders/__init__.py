@@ -32,7 +32,7 @@ class OrdersAPI(ResourceAPI):
         api_urls = [
             APIResourceURL(base_url=url, resource_name='', methods=['POST']),
             APIResourceURL(base_url=url, resource_name='<string:suuid>', methods=['PUT']),
-            APIResourceURL(base_url=url, resource_name='code/<string:code>', methods=['GET']),
+            APIResourceURL(base_url=url, resource_name='code/<int:code>', methods=['GET']),
             APIResourceURL(base_url=url, resource_name='uuid/<string:suuid>', methods=['GET']),
         ]
         return api_urls
@@ -63,16 +63,20 @@ class OrdersAPI(ResourceAPI):
                            payment_uuid=payment_uuid)
 
         try:
-            suuid = order_db.create()
-        except OrderException as e:
-            logging.error(e)
-            error_code = e.error_code
-            error = e.error
-            developer_message = e.developer_message
-            http_code = HTTPStatus.BAD_REQUEST
-            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
-                                        developer_message=developer_message, error_code=error_code)
-            return make_api_response(data=response_data, http_code=http_code)
+            order_db.find_by_code()
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_CREATE_CODE_EXIST_ERROR)
+        except OrderNotFoundException:
+            try:
+                suuid = order_db.create()
+            except OrderException as e:
+                logging.error(e)
+                error_code = e.error_code
+                error = e.error
+                developer_message = e.developer_message
+                http_code = HTTPStatus.BAD_REQUEST
+                response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
+                                            developer_message=developer_message, error_code=error_code)
+                return make_api_response(data=response_data, http_code=http_code)
 
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.CREATED)
         resp = make_api_response(data=response_data, http_code=HTTPStatus.CREATED)
@@ -101,16 +105,20 @@ class OrdersAPI(ResourceAPI):
                            payment_uuid=payment_uuid, modify_reason=modify_reason)
 
         try:
-            order_db.update()
-        except OrderException as e:
-            logging.error(e)
-            error_code = e.error_code
-            error = e.error
-            developer_message = e.developer_message
-            http_code = HTTPStatus.BAD_REQUEST
-            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
-                                        developer_message=developer_message, error_code=error_code)
-            return make_api_response(data=response_data, http_code=http_code)
+            order_db.find_by_code()
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_UPDATE_CODE_EXIST_ERROR)
+        except OrderNotFoundException:
+            try:
+                order_db.update()
+            except OrderException as e:
+                logging.error(e)
+                error_code = e.error_code
+                error = e.error
+                developer_message = e.developer_message
+                http_code = HTTPStatus.BAD_REQUEST
+                response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
+                                            developer_message=developer_message, error_code=error_code)
+                return make_api_response(data=response_data, http_code=http_code)
 
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.NO_CONTENT)
         resp = make_api_response(data=response_data, http_code=HTTPStatus.NO_CONTENT)
