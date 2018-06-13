@@ -9,7 +9,7 @@ sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
 
 
-class PaymentType(object):
+class OrderStatus(object):
     __version__ = 1
 
     _sid = None
@@ -32,16 +32,16 @@ class PaymentType(object):
         }
 
 
-class PaymentTypeStored(StoredObject, PaymentType):
+class OrderStatusStored(StoredObject, OrderStatus):
     __version__ = 1
 
     def __init__(self, storage_service: StorageService, sid: int = None, name: int = None, limit: int = None,
                  offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        PaymentType.__init__(self, sid=sid, name=name)
+        OrderStatus.__init__(self, sid=sid, name=name)
 
 
-class PaymentTypeDB(PaymentTypeStored):
+class OrderStatusDB(OrderStatusStored):
     __version__ = 1
 
     _sid_field = 'id'
@@ -52,18 +52,18 @@ class PaymentTypeDB(PaymentTypeStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('PaymentTypeDB find method')
+        logging.info('OrderStatus find method')
         select_sql = '''
                       SELECT 
                         id,
-                        name, 
-                      FROM public.payment_type
+                        name
+                      FROM public.order_status
                       '''
         logging.debug('Select SQL: %s' % select_sql)
 
         try:
             logging.debug('Call database service')
-            paymenttype_list_db = self._storage_service.get(sql=select_sql)
+            order_status_list_db = self._storage_service.get(sql=select_sql)
         except DatabaseError as e:
             logging.error(e)
             error_message = BillingError.STATE_FIND_ERROR_DB.message
@@ -72,19 +72,19 @@ class PaymentTypeDB(PaymentTypeStored):
                                 "Code: %s . %s" % (
                                     BillingError.STATE_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
-        paymenttype_list = []
+        order_status_list = []
 
-        for paymenttype_db in paymenttype_list_db:
-            paymenttype = self.__mappaymenttypedb_to_paymenttype(paymenttype_db)
-            paymenttype_list.append(paymenttype)
+        for order_status_db in order_status_list_db:
+            order_status = self.__map_order_statusdb_to_order_status(order_status_db)
+            order_status_list.append(order_status)
 
-        if len(paymenttype_list) == 0:
-            logging.warning('Empty PaymentType list of method find. Very strange behaviour.')
+        if len(order_status_list) == 0:
+            logging.warning('Empty OrderStatus list of method find. Very strange behaviour.')
 
-        return paymenttype_list
+        return order_status_list
 
-    def __mappaymenttypedb_to_paymenttype(self, payment_type_db):
-        return PaymentType(
-            sid=payment_type_db[self._sid_field],
-            name=payment_type_db[self._name_field],
+    def __map_order_statusdb_to_order_status(self, order_status_db):
+        return OrderStatus(
+            sid=order_status_db[self._sid_field],
+            name=order_status_db[self._name_field],
         )

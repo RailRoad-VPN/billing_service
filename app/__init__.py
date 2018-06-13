@@ -6,6 +6,8 @@ from flask import Flask
 
 from app.resources.subscriptions import SubscriptionsAPI
 from app.resources.user_subscriptions import UserSubscriptionsAPI
+from app.resources.orders import OrdersAPI
+from app.resources.payments import PaymentsAPI
 
 sys.path.insert(0, '../psql_library')
 from psql_helper import PostgreSQL
@@ -34,6 +36,8 @@ app_config = app.config
 api_base_uri = app_config['API_BASE_URI']
 
 apis = [
+    {'cls': OrdersAPI, 'args': [db_storage_service, app_config]},
+    {'cls': PaymentsAPI, 'args': [db_storage_service, app_config]},
     {'cls': SubscriptionsAPI, 'args': [db_storage_service, app_config]},
     {'cls': UserSubscriptionsAPI, 'args': [db_storage_service, app_config]},
 ]

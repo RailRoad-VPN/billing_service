@@ -133,7 +133,7 @@ class SubscriptionDB(SubscriptionStored):
                       s.modify_reason           AS modify_reason,
                       s.created_date            AS created_date,
                       st.name                   AS name,
-                      st.description            AS description,
+                      st.developer_message            AS description,
                       st.bill_freq              AS bill_freq,
                       st.price_freq              AS price_freq,
                       st.lang_code              AS lang_code
@@ -154,7 +154,7 @@ class SubscriptionDB(SubscriptionStored):
             error_code = BillingError.SUBSCRIPTION_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.SUBSCRIPTION_FIND_ERROR_DB.description, e.pgcode, e.pgerror)
+                                    BillingError.SUBSCRIPTION_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise SubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         subscription_list = []
@@ -178,7 +178,7 @@ class SubscriptionDB(SubscriptionStored):
                       s.modify_reason           AS modify_reason,
                       s.created_date            AS created_date,
                       st.name                   AS name,
-                      st.description            AS description,
+                      st.developer_message            AS description,
                       st.bill_freq              AS bill_freq,
                       st.price_freq              AS price_freq,
                       st.lang_code              AS lang_code
@@ -191,15 +191,30 @@ class SubscriptionDB(SubscriptionStored):
         select_params = (self._sid,)
         try:
             logging.debug('Call database service')
-            subscription_db = self._storage_service.get(sql=select_sql, data=select_params)
+            subscription_list_db = self._storage_service.get(sql=select_sql, data=select_params)
         except DatabaseError as e:
             logging.error(e)
-            error_message = BillingError.SUBSCRIPTION_FIND_ERROR_DB.message
-            error_code = BillingError.SUBSCRIPTION_FIND_ERROR_DB.code
+            error_message = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.message
+            error_code = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.SUBSCRIPTION_FIND_ERROR_DB.description, e.pgcode, e.pgerror)
+                                    BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise SubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
+
+        if len(subscription_list_db) == 1:
+            subscription_db = subscription_list_db[0]
+        elif len(subscription_list_db) == 0:
+            error_message = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.message
+            error_code = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.code
+            developer_message = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.developer_message
+            raise SubscriptionNotFoundException(error=error_message, error_code=error_code,
+                                                developer_message=developer_message)
+        else:
+            error_message = BillingError.VPNSERVER_FIND_BY_UUID_ERROR.message
+            developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
+                                "really bad with database." % BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.developer_message
+            error_code = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.code
+            raise BillingError(message=error_message, code=error_code, developer_message=developer_message)
 
         return self.__mapsubscriptiondb_to_subscription(subscription_db=subscription_db)
 

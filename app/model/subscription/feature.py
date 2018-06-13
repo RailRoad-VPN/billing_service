@@ -118,17 +118,17 @@ class FeatureDB(FeatureStored):
             error_code = BillingError.FEATURE_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.FEATURE_FIND_ERROR_DB.description, e.pgcode, e.pgerror)
-            raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
+                                    BillingError.FEATURE_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+            raise FeatureException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         feature_list = []
         for feature_db in feature_list_db:
-            feature = self.__mapfeaturedb_to_feature(feature_db=feature_db)
+            feature = self.__map_featuredb_to_feature(feature_db=feature_db)
             feature_list.append(feature)
 
         return feature_list
 
-    def __mapfeaturedb_to_feature(self, feature_db):
+    def __map_featuredb_to_feature(self, feature_db):
         return Feature(
             sid=feature_db[self._sid_field],
             subscription_id=feature_db[self._subscription_id_field],

@@ -13,25 +13,25 @@ from storage_service import StorageService, StoredObject
 class Payment(object):
     __version__ = 1
 
-    _sid = None
+    _suuid = None
     _type_id = None
     _created_date = None
 
-    def __init__(self, sid: int = None, type_id: int = None, created_date: datetime = None):
-        self._sid = sid
+    def __init__(self, suuid: str = None, type_id: int = None, created_date: datetime = None):
+        self._suuid = suuid
         self._type_id = type_id
         self._created_date = created_date
 
     def to_dict(self):
         return {
-            'id': self._sid,
+            'uuid': self._suuid,
             'type_id': self._type_id,
             'created_date': self._created_date,
         }
 
     def to_api_dict(self):
         return {
-            'id': self._sid,
+            'uuid': self._suuid,
             'type_id': self._type_id,
             'created_date': self._created_date,
         }
@@ -40,21 +40,54 @@ class Payment(object):
 class PaymentStored(StoredObject, Payment):
     __version__ = 1
 
-    def __init__(self, storage_service: StorageService, sid: int = None, type_id: int = None,
+    def __init__(self, storage_service: StorageService, suuid: str = None, type_id: int = None,
                  created_date: datetime = None, limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        Payment.__init__(self, sid=sid, type_id=type_id, created_date=created_date)
+        Payment.__init__(self, suuid=suuid, type_id=type_id, created_date=created_date)
 
 
 class PaymentDB(PaymentStored):
     __version__ = 1
 
-    _sid_field = 'id'
+    _suuid_field = 'uuid'
     _type_id_field = 'type_id'
     _created_date_field = 'created_date'
 
     def __init__(self, storage_service: StorageService, **kwargs):
         super().__init__(storage_service, **kwargs)
+
+    def find_by_id(self):
+        logging.info('PaymentDB find_by_id method')
+        select_sql = '''
+                    SELECT
+                        p.uuid AS uuid,
+                        p.type_id AS type_id,
+                        to_json(created_date) AS created_date
+                    FROM public.payment p
+                    WHERE p.uuid = ?
+        '''
+        logging.debug('Select SQL: %s' % select_sql)
+        params = (
+            self._suuid
+        )
+        try:
+            logging.debug('Call database service')
+            payment_list_db = self._storage_service.get(sql=select_sql, data=params)
+        except DatabaseError as e:
+            logging.error(e)
+            error_message = BillingError.PAYMENT_FIND_ERROR_DB.message
+            error_code = BillingError.PAYMENT_FIND_ERROR_DB.code
+            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+                                "Code: %s . %s" % (
+                                    BillingError.PAYMENT_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+            raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
+
+        payment_list = []
+        for payment_db in payment_list_db:
+            payment = self.__map_paymentdb_to_payment(payment_db=payment_db)
+            payment_list.append(payment)
+
+        return payment_list
 
     def create(self):
         logging.info('PaymentDB create method')
@@ -63,7 +96,7 @@ class PaymentDB(PaymentStored):
                         (type_id, created_date) 
                       VALUES 
                         (?, ?)
-                      RETURNING id;
+                      RETURNING uuid;
                      '''
         insert_params = (
             self._type_id,
@@ -85,12 +118,12 @@ class PaymentDB(PaymentStored):
             error_code = BillingError.PAYMENT_CREATE_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.PAYMENT_CREATE_ERROR_DB.description, e.pgcode, e.pgerror)
+                                    BillingError.PAYMENT_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
             raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
         logging.debug('PaymentDB created.')
 
-        return self._sid
+        return self._suuid
 
     def update(self):
         logging.info('Payment update method')
@@ -101,7 +134,7 @@ class PaymentDB(PaymentStored):
                         type_id = ?,
                         created_date = ?
                     WHERE 
-                        id = ?
+                        uuid = ?
                     '''
 
         logging.debug('Update SQL: %s' % update_sql)
@@ -109,7 +142,7 @@ class PaymentDB(PaymentStored):
         update_params = (
             self._type_id,
             self._created_date,
-            self._sid,
+            self._suuid,
         )
 
         try:
@@ -125,13 +158,13 @@ class PaymentDB(PaymentStored):
             error_message = BillingError.PAYMENT_UPDATE_ERROR_DB.message
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.PAYMENT_UPDATE_ERROR_DB.description, e.pgcode, e.pgerror)
+                                    BillingError.PAYMENT_UPDATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             error_code = BillingError.PAYMENT_UPDATE_ERROR_DB.code
             raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
 
-    def __mappaymentdb_to_payment(self, payment_db):
+    def __map_paymentdb_to_payment(self, payment_db):
         return Payment(
-            sid=payment_db[self._sid_field],
+            suuid=payment_db[self._suuid_field],
             type_id=payment_db[self._type_id_field],
             created_date=payment_db[self._created_date_field],
         )

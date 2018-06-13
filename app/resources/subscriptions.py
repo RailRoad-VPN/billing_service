@@ -15,7 +15,7 @@ from storage_service import DBStorageService
 sys.path.insert(0, '../rest_api_library')
 from api import ResourceAPI
 from response import APIResponseStatus, APIResponse
-from utils import make_api_response
+from utils import make_api_response, make_error_request_response
 from rest import APIResourceURL
 
 
@@ -56,12 +56,7 @@ class SubscriptionsAPI(ResourceAPI):
         lang_code = request.headers.get('Accept-Language', None)
 
         if lang_code is None:
-            response_data = APIResponse(status=APIResponseStatus.failed.value, code=HTTPStatus.BAD_REQUEST,
-                                        error=BillingError.BAD_ACCEPT_LANGUAGE_HEADER.message,
-                                        developer_message=BillingError.BAD_ACCEPT_LANGUAGE_HEADER.description,
-                                        error_code=BillingError.BAD_ACCEPT_LANGUAGE_HEADER.code)
-
-            return make_api_response(data=response_data, http_code=HTTPStatus.BAD_REQUEST)
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, error=BillingError.BAD_ACCEPT_LANGUAGE_HEADER)
 
         subscription_db = SubscriptionDB(storage_service=self.__db_storage_service, lang_code=lang_code,
                                          limit=self.pagination.limit, offset=self.pagination.offset)
@@ -75,7 +70,7 @@ class SubscriptionsAPI(ResourceAPI):
             error = e.error
             developer_message = e.developer_message
             http_code = HTTPStatus.BAD_REQUEST
-            response_data = APIResponse(status=APIResponseStatus.failed.value, code=http_code, error=error,
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
                                         developer_message=developer_message, error_code=error_code)
             return make_api_response(data=response_data, http_code=http_code)
 
@@ -92,11 +87,11 @@ class SubscriptionsAPI(ResourceAPI):
             error = e.error
             developer_message = e.developer_message
             http_code = HTTPStatus.BAD_REQUEST
-            response_data = APIResponse(status=APIResponseStatus.failed.value, code=http_code, error=error,
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
                                         developer_message=developer_message, error_code=error_code)
             return make_api_response(data=response_data, http_code=http_code)
 
-        response_data = APIResponse(status=APIResponseStatus.success.value, code=HTTPStatus.OK,
+        response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.OK,
                                     data=subscription_list_dict, limit=self.pagination.limit,
                                     offset=self.pagination.offset)
 
