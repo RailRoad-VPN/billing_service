@@ -179,22 +179,21 @@ class UserSubscriptionDB(UserSubscriptionStored):
         logging.info('UserSubscriptionDB create method')
         insert_sql = '''
                       INSERT INTO public.user_subscription
-                        (user_uuid, subscription_id , expire_date, order_uuid)
+                        (user_uuid, subscription_id, order_uuid)
                       VALUES 
-                        (?, ?, ?, ?, ?, ?, ?)
+                        (?, ?, ?)
                       RETURNING uuid
                      '''
         insert_params = (
             self._user_uuid,
             self._subscription_id,
-            self._expire_date,
             self._order_uuid,
         )
         logging.debug('Create UserSubscriptionDB SQL : %s' % insert_sql)
 
         try:
             logging.debug('Call database service')
-            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params)
+            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._suuid_field]
         except DatabaseError as e:
             self._storage_service.rollback()
             logging.error(e)
@@ -202,13 +201,13 @@ class UserSubscriptionDB(UserSubscriptionStored):
                 e = e.args[0]
             except IndexError:
                 pass
-            error_message = BillingError.ORDER_CREATE_ERROR_DB.message
-            error_code = BillingError.ORDER_CREATE_ERROR_DB.code
+            error_message = BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.message
+            error_code = BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.ORDER_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
-            raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise UserSubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
         logging.debug('UserSubscriptionDB created.')
 
         return self._suuid
@@ -224,9 +223,8 @@ class UserSubscriptionDB(UserSubscriptionStored):
                         expire_date = ?,
                         order_uuid = ?,
                         modify_date = ?,
-                        modify_reason = ?,
-                    WHERE 
-                        suuid = ?
+                        modify_reason = ?
+                    WHERE uuid = ?
                     '''
 
         logging.debug('Update SQL: %s' % update_sql)
@@ -238,7 +236,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             self._order_uuid,
             self._modify_date,
             self._modify_reason,
-            self._uuid,
+            self._suuid,
         )
 
         try:

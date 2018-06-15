@@ -103,7 +103,7 @@ CREATE TABLE public.user_subscription
   , user_uuid UUID NOT NULL
   , subscription_id INT REFERENCES public.subscription(id) NOT NULL
   , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
-  , expire_date TIMESTAMP NOT NULL
+  , expire_date TIMESTAMP DEFAULT (now() + interval '1 year') NOT NULL
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'
   , created_date TIMESTAMP NOT NULL DEFAULT now()

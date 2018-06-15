@@ -52,12 +52,18 @@ class UserSubscriptionsAPI(ResourceAPI):
         if not is_valid:
             return make_error_request_response(HTTPStatus.NOT_FOUND, err=BillingError.BAD_IDENTITY_ERROR)
 
-        user_uuid = request_json.get('user_uuid', None)
-        subscription_id = request_json.get('subscription_id', None)
-        expire_date = request_json.get('expire_date', None)
-        order_uuid = request_json.get('order_uuid', None)
+        user_uuid = request_json.get(UserSubscriptionDB._user_uuid_field, None)
+        subscription_id = request_json.get(UserSubscriptionDB._subscription_id_field, None)
+        expire_date = request_json.get(UserSubscriptionDB._expire_date_field, None)
+        order_uuid = request_json.get(UserSubscriptionDB._order_uuid_field, None)
 
-        error_fields = check_required_api_fields(user_uuid, subscription_id, expire_date, order_uuid)
+        req_fields = {
+            'user_uuid': user_uuid,
+            'subscription_id': subscription_id,
+            'order_uuid': order_uuid,
+        }
+
+        error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
                                         errors=error_fields)
@@ -66,8 +72,7 @@ class UserSubscriptionsAPI(ResourceAPI):
 
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, user_uuid=user_uuid,
                                                   subscription_id=subscription_id, expire_date=expire_date,
-                                                  order_uuid=order_uuid, limit=self.pagination.limit,
-                                                  offset=self.pagination.offset)
+                                                  order_uuid=order_uuid)
 
         try:
             user_subscription_uuid = user_subscription_db.create()
@@ -79,7 +84,7 @@ class UserSubscriptionsAPI(ResourceAPI):
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.CREATED)
         resp = make_api_response(data=response_data, http_code=response_data.code)
 
-        api_url = self.__api_url__ % user_uuid
+        api_url = self.__api_url__.replace('<string:user_uuid>', user_uuid)
         resp.headers['Location'] = '%s/%s/%s' % (self._config['API_BASE_URI'], api_url, user_subscription_uuid)
         return resp
 
@@ -104,8 +109,16 @@ class UserSubscriptionsAPI(ResourceAPI):
         modify_date = request_json.get('modify_date', None)
         modify_reason = request_json.get('modify_reason', None)
 
-        error_fields = check_required_api_fields(us_uuid, user_uuid, subscription_id, expire_date, order_uuid,
-                                                 modify_date, modify_reason)
+        req_fields = {
+            'user_uuid': user_uuid,
+            'subscription_id': subscription_id,
+            'expire_date': expire_date,
+            'order_uuid': order_uuid,
+            'modify_date': modify_date,
+            'modify_reason': modify_reason,
+        }
+
+        error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
                                         errors=error_fields)
@@ -115,8 +128,7 @@ class UserSubscriptionsAPI(ResourceAPI):
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, suuid=us_uuid,
                                                   user_uuid=user_uuid, subscription_id=subscription_id,
                                                   expire_date=expire_date, order_uuid=order_uuid,
-                                                  modify_date=modify_date, modify_reason=modify_reason,
-                                                  limit=self.pagination.limit, offset=self.pagination.offset)
+                                                  modify_date=modify_date, modify_reason=modify_reason)
         try:
             user_subscription_db.find_by_uuid()
         except UserSubscriptionNotFoundException as e:
@@ -140,7 +152,8 @@ class UserSubscriptionsAPI(ResourceAPI):
             return make_error_request_response(HTTPStatus.BAD_REQUEST,
                                                err=BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR)
 
-        user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, suuid=user_subscription_uuid,
+        user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service,
+                                                  suuid=user_subscription_uuid,
                                                   user_uuid=user_uuid, limit=self.pagination.limit,
                                                   offset=self.pagination.offset)
         if user_subscription_uuid is not None:
@@ -179,7 +192,8 @@ class UserSubscriptionsAPI(ResourceAPI):
             # get all user subscriptions
             try:
                 user_subscription_list = user_subscription_db.find_by_user_uuid()
-                user_subscription_dict = [user_subscription_list[i].to_api_dict() for i in range(0, len(user_subscription_list))]
+                user_subscription_dict = [user_subscription_list[i].to_api_dict() for i in
+                                          range(0, len(user_subscription_list))]
                 response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.OK,
                                             data=user_subscription_dict, limit=self.pagination.limit,
                                             offset=self.pagination.offset)

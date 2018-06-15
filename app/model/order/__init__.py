@@ -47,7 +47,7 @@ class Order(object):
             'uuid': str(self._suuid),
             'code': self._code,
             'status_id': self._status_id,
-            'payment_uuid': str(self._payment_uuid),
+            'payment_uuid': str(self._payment_uuid) if self._payment_uuid else '',
             'modify_date': self._modify_date,
             'modify_reason': self._modify_reason,
             'created_date': self._created_date,

@@ -30,7 +30,7 @@ class OrdersAPI(ResourceAPI):
     def get_api_urls(base_url: str) -> List[APIResourceURL]:
         url = "%s/%s" % (base_url, OrdersAPI.__api_url__)
         api_urls = [
-            APIResourceURL(base_url=url, resource_name='', methods=['POST']),
+            APIResourceURL(base_url=url, resource_name='', methods=['GET', 'POST']),
             APIResourceURL(base_url=url, resource_name='<string:suuid>', methods=['PUT']),
             APIResourceURL(base_url=url, resource_name='code/<int:code>', methods=['GET']),
             APIResourceURL(base_url=url, resource_name='uuid/<string:suuid>', methods=['GET']),
@@ -52,7 +52,12 @@ class OrdersAPI(ResourceAPI):
         status_id = request_json.get(OrderDB._status_id_field, None)
         payment_uuid = request_json.get(OrderDB._payment_uuid_field, None)
 
-        error_fields = check_required_api_fields(code, status_id)
+        req_fields = {
+            'code': code,
+            'status_id': status_id,
+        }
+
+        error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
                                         errors=error_fields)
@@ -100,6 +105,20 @@ class OrdersAPI(ResourceAPI):
         status_id = request_json.get(OrderDB._status_id_field)
         payment_uuid = request_json.get(OrderDB._payment_uuid_field)
         modify_reason = request_json.get(OrderDB._modify_reason_field)
+
+        req_fields = {
+            'code': code,
+            'status_id': status_id,
+            'payment_uuid': payment_uuid,
+            'modify_reason': modify_reason,
+        }
+
+        error_fields = check_required_api_fields(req_fields)
+        if len(error_fields) > 0:
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
+                                        errors=error_fields)
+            resp = make_api_response(data=response_data, http_code=response_data.code)
+            return resp
 
         order_db = OrderDB(storage_service=self.__db_storage_service, suuid=suuid, code=code, status_id=status_id,
                            payment_uuid=payment_uuid, modify_reason=modify_reason)
