@@ -53,7 +53,7 @@ class UserSubscriptionsAPI(ResourceAPI):
             return make_error_request_response(HTTPStatus.NOT_FOUND, err=BillingError.BAD_IDENTITY_ERROR)
 
         user_uuid = request_json.get(UserSubscriptionDB._user_uuid_field, None)
-        subscription_id = request_json.get(UserSubscriptionDB._subscription_id_field, None)
+        subscription_id = int(request_json.get(UserSubscriptionDB._subscription_id_field, None))
         expire_date = request_json.get(UserSubscriptionDB._expire_date_field, None)
         order_uuid = request_json.get(UserSubscriptionDB._order_uuid_field, None)
 

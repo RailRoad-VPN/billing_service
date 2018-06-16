@@ -47,7 +47,7 @@ class Order(object):
             'uuid': str(self._suuid),
             'code': self._code,
             'status_id': self._status_id,
-            'payment_uuid': str(self._payment_uuid) if self._payment_uuid else '',
+            'payment_uuid': str(self._payment_uuid) if self._payment_uuid else None,
             'modify_date': self._modify_date,
             'modify_reason': self._modify_reason,
             'created_date': self._created_date,
@@ -214,13 +214,12 @@ class OrderDB(OrderStored):
         logging.info('OrderDB create method')
         insert_sql = '''
                       INSERT INTO public.order 
-                        (code, status_id, payment_uuid) 
+                        (status_id, payment_uuid) 
                       VALUES 
-                        (?, ?, ?)
+                        (?, ?)
                       RETURNING uuid;
                      '''
         insert_params = (
-            self._code,
             self._status_id,
             self._payment_uuid,
         )

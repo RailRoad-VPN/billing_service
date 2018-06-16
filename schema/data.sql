@@ -192,9 +192,10 @@ INSERT INTO public.payment_type (id, name) VALUES (2, 'payproglobal_test');
 
 INSERT INTO public.payment (uuid, type_id, created_date) VALUES ('6eaf5278-11c8-47bf-85bb-42345ac9737d', 2, '2018-06-10 18:50:39.791022');
 
-INSERT INTO public.order_status (id, name) VALUES (1, 'processing');
-INSERT INTO public.order_status (id, name) VALUES (2, 'success');
-INSERT INTO public.order_status (id, name) VALUES (3, 'failed');
+INSERT INTO public.order_status (id, name) VALUES (1, 'new');
+INSERT INTO public.order_status (id, name) VALUES (2, 'processing');
+INSERT INTO public.order_status (id, name) VALUES (3, 'success');
+INSERT INTO public.order_status (id, name) VALUES (4, 'failed');
 
 INSERT INTO public."order" (uuid, code, status_id, payment_uuid, modify_date, modify_reason, created_date) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1, '6eaf5278-11c8-47bf-85bb-42345ac9737d', '2018-06-10 18:50:05.949923', 'init', '2018-06-10 18:50:05.949923');
 

@@ -1,7 +1,7 @@
 import datetime
 import logging
-import sys
 
+from dateutil.relativedelta import relativedelta
 from psycopg2._psycopg import DatabaseError
 
 from app.exception import *
@@ -22,17 +22,33 @@ class UserSubscription(object):
     _modify_reason = None
     _created_date = None
 
-    def __init__(self, suuid: str = None, user_uuid: str = None, subscription_id: int = None, expire_date: datetime = None,
-                 order_uuid: str = None, modify_date: datetime = None, modify_reason: str = None,
-                 created_date: datetime = None):
+    def __init__(self, suuid: str = None, user_uuid: str = None, subscription_id: int = None,
+                 expire_date: datetime = None, order_uuid: str = None, modify_date: datetime = None,
+                 modify_reason: str = None, created_date: datetime = None):
         self._suuid = suuid
         self._user_uuid = user_uuid
         self._subscription_id = subscription_id
-        self._expire_date = expire_date
+        if expire_date:
+            self._expire_date = expire_date
+        else:
+            self._expire_date = self.calculate_expire_date()
         self._order_uuid = order_uuid
         self._modify_date = modify_date
         self._modify_reason = modify_reason
         self._created_date = created_date
+
+    def calculate_expire_date(self):
+        now = datetime.datetime.now()
+        if self._subscription_id == 1:
+            return now + relativedelta(months=1)
+        elif self._subscription_id == 2:
+            return now + relativedelta(years=1)
+        elif self._subscription_id == 3:
+            return now + relativedelta(years=1)
+        elif self._subscription_id == 4:
+            return now + relativedelta(years=3)
+        else:
+            return now
 
     def to_dict(self):
         return {
@@ -62,14 +78,14 @@ class UserSubscription(object):
 class UserSubscriptionStored(StoredObject, UserSubscription):
     __version__ = 1
 
-    def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None, subscription_id: int = None,
-                 expire_date: datetime = None, order_uuid: str = None, modify_date: datetime = None,
-                 modify_reason: str = None, created_date: datetime = None, limit: int = None, offset: int = None,
-                 **kwargs):
+    def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None,
+                 subscription_id: int = None, expire_date: datetime = None, order_uuid: str = None,
+                 modify_date: datetime = None, modify_reason: str = None, created_date: datetime = None,
+                 limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        UserSubscription.__init__(self, suuid=suuid, user_uuid=user_uuid, subscription_id=subscription_id, expire_date=expire_date,
-                                  modify_date=modify_date, modify_reason=modify_reason, order_uuid=order_uuid,
-                                  created_date=created_date)
+        UserSubscription.__init__(self, suuid=suuid, user_uuid=user_uuid, subscription_id=subscription_id,
+                                  expire_date=expire_date, modify_date=modify_date, modify_reason=modify_reason,
+                                  order_uuid=order_uuid, created_date=created_date)
 
 
 class UserSubscriptionDB(UserSubscriptionStored):
@@ -135,7 +151,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             raise UserSubscriptionException(error=error_message, error_code=error_code,
                                             developer_message=developer_message)
 
-        return self.__map_user_subscriptiondb_to_user_subscription(user_subscription_db=user_subscription_db)
+        return self.from_db_to_obj(user_subscription_db=user_subscription_db)
 
     def find_by_user_uuid(self):
         logging.info('UserSubscriptionDB find_by_user_uuid_id method')
@@ -163,14 +179,15 @@ class UserSubscriptionDB(UserSubscriptionStored):
             error_code = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.developer_message, e.pgcode,
+                                    BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.developer_message,
+                                    e.pgcode,
                                     e.pgerror)
             raise UserSubscriptionException(error=error_message, error_code=error_code,
                                             developer_message=developer_message)
 
         user_subscription_list = []
         for user_subscription_db in user_subscription_list_db:
-            user_subscription = self.__map_user_subscriptiondb_to_user_subscription(user_subscription_db=user_subscription_db)
+            user_subscription = self.from_db_to_obj(user_subscription_db=user_subscription_db)
             user_subscription_list.append(user_subscription)
 
         return user_subscription_list
@@ -179,13 +196,14 @@ class UserSubscriptionDB(UserSubscriptionStored):
         logging.info('UserSubscriptionDB create method')
         insert_sql = '''
                       INSERT INTO public.user_subscription
-                        (user_uuid, subscription_id, order_uuid)
+                        (user_uuid, expire_date, subscription_id, order_uuid)
                       VALUES 
-                        (?, ?, ?)
+                        (?, ?, ?, ?)
                       RETURNING uuid
                      '''
         insert_params = (
             self._user_uuid,
+            self._expire_date,
             self._subscription_id,
             self._order_uuid,
         )
@@ -193,7 +211,8 @@ class UserSubscriptionDB(UserSubscriptionStored):
 
         try:
             logging.debug('Call database service')
-            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._suuid_field]
+            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][
+                self._suuid_field]
         except DatabaseError as e:
             self._storage_service.rollback()
             logging.error(e)
@@ -205,9 +224,11 @@ class UserSubscriptionDB(UserSubscriptionStored):
             error_code = BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.developer_message, e.pgcode,
+                                    e.pgerror)
 
-            raise UserSubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise UserSubscriptionException(error=error_message, error_code=error_code,
+                                            developer_message=developer_message)
         logging.debug('UserSubscriptionDB created.')
 
         return self._suuid
@@ -252,11 +273,13 @@ class UserSubscriptionDB(UserSubscriptionStored):
             error_message = BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.message
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.developer_message, e.pgcode,
+                                    e.pgerror)
             error_code = BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.code
-            raise UserSubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise UserSubscriptionException(error=error_message, error_code=error_code,
+                                            developer_message=developer_message)
 
-    def __map_user_subscriptiondb_to_user_subscription(self, user_subscription_db):
+    def from_db_to_obj(self, user_subscription_db):
         return UserSubscription(
             suuid=user_subscription_db[self._suuid_field],
             user_uuid=user_subscription_db[self._user_uuid_field],

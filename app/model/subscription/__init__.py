@@ -133,9 +133,9 @@ class SubscriptionDB(SubscriptionStored):
                       s.modify_reason           AS modify_reason,
                       s.created_date            AS created_date,
                       st.name                   AS name,
-                      st.developer_message            AS description,
+                      st.description            AS description,
                       st.bill_freq              AS bill_freq,
-                      st.price_freq              AS price_freq,
+                      st.price_freq             AS price_freq,
                       st.lang_code              AS lang_code
                     FROM public.subscription s
                       JOIN public.subscription_translation st ON s.id = st.subscription_id
@@ -178,9 +178,9 @@ class SubscriptionDB(SubscriptionStored):
                       s.modify_reason           AS modify_reason,
                       s.created_date            AS created_date,
                       st.name                   AS name,
-                      st.developer_message            AS description,
+                      st.description            AS description,
                       st.bill_freq              AS bill_freq,
-                      st.price_freq              AS price_freq,
+                      st.price_freq             AS price_freq,
                       st.lang_code              AS lang_code
                     FROM public.subscription s
                       JOIN public.subscription_translation st ON s.id = st.subscription_id

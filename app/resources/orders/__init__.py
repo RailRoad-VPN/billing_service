@@ -17,6 +17,7 @@ from utils import make_api_response, check_uuid, make_error_request_response, ch
 from rest import APIResourceURL
 from response import APIResponse, APIResponseStatus
 
+logger = logging.getLogger(__name__)
 
 class OrdersAPI(ResourceAPI):
     __version__ = 1
@@ -53,7 +54,6 @@ class OrdersAPI(ResourceAPI):
         payment_uuid = request_json.get(OrderDB._payment_uuid_field, None)
 
         req_fields = {
-            'code': code,
             'status_id': status_id,
         }
 
