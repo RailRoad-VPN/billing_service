@@ -1,2 +1,11 @@
 .DS_Store
 .idea
+/app/resources/users/__pycache__
+/app/resources/payments/__pycache__
+/app/resources/orders/__pycache__
+/app/resources/__pycache__
+/app/model/subscription/__pycache__
+/app/model/order/__pycache__
+/app/model/__pycache__
+/app/__pycache__
+/__pycache__
