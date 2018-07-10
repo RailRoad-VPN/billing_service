@@ -19,6 +19,7 @@ from response import APIResponse, APIResponseStatus
 
 logger = logging.getLogger(__name__)
 
+
 class OrdersAPI(ResourceAPI):
     __version__ = 1
 

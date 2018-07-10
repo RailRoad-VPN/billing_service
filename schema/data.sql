@@ -13,8 +13,8 @@ TRUNCATE user_subscription CASCADE;
 
 -- FREE
 INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (1, 0, 0, 1, 0);
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'FREE PACK', 'Try it for free!', NULL, NULL, 'en');
-INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', NULL, NULL, 'ru');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'FREE PACK', 'Try it for free!', 'not billed', 'not billed', 'en');
+INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', 'не оплачивается', 'не оплачивается', 'ru');
 
 -- STARTER
 INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (2, 8.69, 7.96, 12, 1);
@@ -186,7 +186,6 @@ INSERT INTO public.subscription_feature_translation (subscription_feature_id, na
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (48, 'Торренты и P2P службы', 'Используйте P2P сервисы, скачивайте торренты без ограничений!', 'ru');
 
 
-
 INSERT INTO public.payment_type (id, name) VALUES (1, 'payproglobal');
 INSERT INTO public.payment_type (id, name) VALUES (2, 'payproglobal_test');
 
@@ -198,5 +197,7 @@ INSERT INTO public.order_status (id, name) VALUES (3, 'success');
 INSERT INTO public.order_status (id, name) VALUES (4, 'failed');
 
 INSERT INTO public."order" (uuid, code, status_id, payment_uuid, modify_date, modify_reason, created_date) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1, '6eaf5278-11c8-47bf-85bb-42345ac9737d', '2018-06-10 18:50:05.949923', 'init', '2018-06-10 18:50:05.949923');
+INSERT INTO public."order" (uuid, code, status_id, payment_uuid, modify_date, modify_reason, created_date) VALUES ('aad762d8-aab5-4625-969e-398cf3e24274', 1, 1, '6eaf5278-11c8-47bf-85bb-42345ac9737d', '2018-06-10 18:50:05.949923', 'init', '2018-06-10 18:50:05.949923');
 
 INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date, modify_date, modify_reason, created_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 1, 'fbd762d8-fbb5-4625-969e-398cf3e24274', '2018-06-13 22:26:48.036000', '2018-06-13 18:26:52.581000', 'init', '2018-06-13 18:27:08.556405');
+INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date, modify_date, modify_reason, created_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 2, 'aad762d8-aab5-4625-969e-398cf3e24274', '2018-06-13 22:26:48.036000', '2018-06-13 18:26:52.581000', 'init', '2018-06-13 18:27:08.556405');
