@@ -16,7 +16,7 @@ from storage_service import DBStorageService
 
 sys.path.insert(1, '../rest_api_library')
 from api import register_api
-from utils import make_error_request_response
+from response import make_error_request_response
 
 logging.basicConfig(level=logging.DEBUG)
 

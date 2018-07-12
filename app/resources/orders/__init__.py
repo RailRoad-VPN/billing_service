@@ -13,7 +13,8 @@ from storage_service import DBStorageService
 
 sys.path.insert(0, '../rest_api_library')
 from api import ResourceAPI
-from utils import make_api_response, check_uuid, make_error_request_response, check_required_api_fields
+from utils import check_uuid
+from response import make_api_response, make_error_request_response, check_required_api_fields
 from rest import APIResourceURL
 from response import APIResponse, APIResponseStatus
 
