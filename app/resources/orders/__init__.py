@@ -127,19 +127,20 @@ class OrdersAPI(ResourceAPI):
 
         try:
             order_db.find_by_code()
-            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_UPDATE_CODE_EXIST_ERROR)
         except OrderNotFoundException:
-            try:
-                order_db.update()
-            except OrderException as e:
-                logging.error(e)
-                error_code = e.error_code
-                error = e.error
-                developer_message = e.developer_message
-                http_code = HTTPStatus.BAD_REQUEST
-                response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
-                                            developer_message=developer_message, error_code=error_code)
-                return make_api_response(data=response_data, http_code=http_code)
+            return make_error_request_response(HTTPStatus.NOT_FOUND, err=BillingError.ORDER_UPDATE_NOT_EXIST_ERROR)
+
+        try:
+            order_db.update()
+        except OrderException as e:
+            logging.error(e)
+            error_code = e.error_code
+            error = e.error
+            developer_message = e.developer_message
+            http_code = HTTPStatus.BAD_REQUEST
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
+                                        developer_message=developer_message, error_code=error_code)
+            return make_api_response(data=response_data, http_code=http_code)
 
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.NO_CONTENT)
         resp = make_api_response(data=response_data, http_code=HTTPStatus.NO_CONTENT)

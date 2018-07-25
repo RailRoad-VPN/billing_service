@@ -42,8 +42,16 @@ class BillingError(APIErrorEnum):
     USER_SUBSCRIPTION_UPDATE_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_UPDATE_ERROR_DB phrase', 'USER_SUBSCRIPTION_UPDATE_ERROR_DB description')
     USER_SUBSCRIPTION_CREATE_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_CREATE_ERROR_DB phrase', 'USER_SUBSCRIPTION_CREATE_ERROR_DB description')
 
-    PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR_DB description')
-    PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTID_ERROR description')
+    PAYMENT_FIND_ERROR_DB = (name + str(count()), 'PAYMENT_FIND_ERROR_DB phrase', 'PAYMENT_FIND_ERROR_DB description')
+    PAYMENT_FIND_BY_ID_ERROR_DB = (name + str(count()), 'PAYMENT_FIND_BY_ID_ERROR_DB phrase', 'PAYMENT_FIND_BY_ID_ERROR_DB description')
+    PAYMENT_CREATE_ERROR_DB = (name + str(count()), 'PAYMENT_CREATE_ERROR_DB phrase', 'PAYMENT_CREATE_ERROR_DB description')
+    PAYMENT_UPDATE_ERROR_DB = (name + str(count()), 'PAYMENT_UPDATE_ERROR_DB phrase', 'PAYMENT_UPDATE_ERROR_DB description')
+    PAYMENT_FIND_BY_ID_ERROR = (name + str(count()), 'PAYMENT_FIND_BY_ID_ERROR phrase', 'PAYMENT_FIND_BY_ID_ERROR description')
+
+    PPG_PAYMENT_CREATE_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_CREATE_ERROR_DB phrase', 'PPG_PAYMENT_CREATE_ERROR_DB description')
+    PPG_PAYMENT_UPDATE_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_UPDATE_ERROR_DB phrase', 'PPG_PAYMENT_UPDATE_ERROR_DB description')
+    PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB description')
+    PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR description')
     PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB description')
     PPG_PAYMENT_FIND_BY_ORDERID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR description')
 
@@ -58,6 +66,7 @@ class BillingError(APIErrorEnum):
     ORDER_UPDATE_IDENTIFIER_ERROR = (name + str(count()), 'ORDER_UPDATE_IDENTIFIER_ERROR phrase', 'ORDER_UPDATE_IDENTIFIER_ERROR description')
     ORDER_CREATE_CODE_EXIST_ERROR = (name + str(count()), 'ORDER_CREATE_CODE_EXIST_ERROR phrase', 'ORDER_CREATE_CODE_EXIST_ERROR description')
     ORDER_UPDATE_CODE_EXIST_ERROR = (name + str(count()), 'ORDER_UPDATE_CODE_EXIST_ERROR phrase', 'ORDER_UPDATE_CODE_EXIST_ERROR description')
+    ORDER_UPDATE_NOT_EXIST_ERROR = (name + str(count()), 'ORDER_UPDATE_NOT_EXIST_ERROR phrase', 'ORDER_UPDATE_NOT_EXIST_ERROR description')
 
     BAD_ACCEPT_LANGUAGE_HEADER = (name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
 
@@ -98,6 +107,20 @@ class SubscriptionException(BillingException):
 
 
 class SubscriptionNotFoundException(SubscriptionException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class PaymentException(BillingException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class PaymentNotFoundException(PaymentException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):

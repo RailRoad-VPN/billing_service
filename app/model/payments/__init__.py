@@ -1,10 +1,11 @@
 import datetime
 import logging
 import sys
+import uuid
 
 from psycopg2._psycopg import DatabaseError
 
-from app.exception import BillingError, BillingException
+from app.exception import BillingError, PaymentException, PaymentNotFoundException
 
 sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
@@ -79,28 +80,33 @@ class PaymentDB(PaymentStored):
             error_code = BillingError.PAYMENT_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.PAYMENT_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
-            raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
+                                    BillingError.PAYMENT_FIND_BY_ID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
-        payment_list = []
-        for payment_db in payment_list_db:
-            payment = self.__map_paymentdb_to_payment(payment_db=payment_db)
-            payment_list.append(payment)
+        if len(payment_list_db) == 1:
+            payment_db = payment_list_db[0]
+        elif len(payment_list_db) == 0:
+            error_message = BillingError.PAYMENT_FIND_BY_ID_ERROR.message
+            error_code = BillingError.PAYMENT_FIND_BY_ID_ERROR.code
+            developer_message = BillingError.PAYMENT_FIND_BY_ID_ERROR.developer_message
+            raise PaymentNotFoundException(error=error_message, error_code=error_code,
+                                           developer_message=developer_message)
+        else:
+            error_message = BillingError.PAYMENT_FIND_BY_ID_ERROR.message
+            developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
+                                "really bad with database." % BillingError.PAYMENT_FIND_BY_ID_ERROR.developer_message
+            error_code = BillingError.PAYMENT_FIND_BY_ID_ERROR.code
+            raise PaymentException(message=error_message, code=error_code, developer_message=developer_message)
 
-        return payment_list
+        return self.__map_paymentdb_to_payment(payment_db=payment_db)
 
     def create(self):
+        self._suuid = uuid.uuid4()
         logging.info('PaymentDB create method')
-        insert_sql = '''
-                      INSERT INTO public.payment 
-                        (type_id, created_date) 
-                      VALUES 
-                        (?, ?)
-                      RETURNING uuid;
-                     '''
+        insert_sql = '''INSERT INTO public.payment (uuid, type_id) VALUES (?, ?);'''
         insert_params = (
+            self._suuid,
             self._type_id,
-            self._created_date,
         )
         logging.debug('Create PaymentDB SQL : %s' % insert_sql)
 
@@ -120,10 +126,10 @@ class PaymentDB(PaymentStored):
                                 "Code: %s . %s" % (
                                     BillingError.PAYMENT_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
-            raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
         logging.debug('PaymentDB created.')
 
-        return self._suuid
+        return str(self._suuid)
 
     def update(self):
         logging.info('Payment update method')
@@ -160,7 +166,7 @@ class PaymentDB(PaymentStored):
                                 "Code: %s . %s" % (
                                     BillingError.PAYMENT_UPDATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             error_code = BillingError.PAYMENT_UPDATE_ERROR_DB.code
-            raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
     def __map_paymentdb_to_payment(self, payment_db):
         return Payment(
