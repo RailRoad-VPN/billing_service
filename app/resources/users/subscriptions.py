@@ -138,7 +138,7 @@ class UserSubscriptionsAPI(ResourceAPI):
 
         try:
             user_subscription_db.update()
-            response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.NO_CONTENT)
+            response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.OK)
             return make_api_response(data=response_data, http_code=response_data.code)
         except UserSubscriptionException as e:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,

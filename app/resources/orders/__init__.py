@@ -111,7 +111,6 @@ class OrdersAPI(ResourceAPI):
         req_fields = {
             'code': code,
             'status_id': status_id,
-            'payment_uuid': payment_uuid,
             'modify_reason': modify_reason,
         }
 
@@ -142,8 +141,8 @@ class OrdersAPI(ResourceAPI):
                                         developer_message=developer_message, error_code=error_code)
             return make_api_response(data=response_data, http_code=http_code)
 
-        response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.NO_CONTENT)
-        resp = make_api_response(data=response_data, http_code=HTTPStatus.NO_CONTENT)
+        response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.OK)
+        resp = make_api_response(data=response_data, http_code=HTTPStatus.OK)
         return resp
 
     def get(self, suuid: str = None, code: int = None) -> Response:
