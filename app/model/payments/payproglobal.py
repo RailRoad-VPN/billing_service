@@ -162,7 +162,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                       WHERE ppgp.payment_uuid = ?
         '''
 
-        logging.debug('Select SQL: %s' % select_sql)
+        logging.debug(f"Select SQL: {select_sql}")
         params = (self._payment_suuid,)
 
         try:
@@ -212,7 +212,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                       WHERE ppgp.order_id = ?
         '''
 
-        logging.debug('Select SQL: %s' % select_sql)
+        logging.debug(f"Select SQL: {select_sql}")
         params = (self._order_id,)
 
         try:

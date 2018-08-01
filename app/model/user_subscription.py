@@ -118,7 +118,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.uuid = ?
         '''
-        logging.debug('Select SQL: %s' % select_sql)
+        logging.debug(f"Select SQL: {select_sql}")
         params = (self._suuid,)
         try:
             logging.debug('Call database service')
@@ -168,7 +168,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.user_uuid = ?
         '''
-        logging.debug('Select SQL: %s' % select_sql)
+        logging.debug(f"Select SQL: {select_sql}")
         params = (self._user_uuid,)
         try:
             logging.debug('Call database service')

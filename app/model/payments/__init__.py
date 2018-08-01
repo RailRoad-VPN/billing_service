@@ -67,7 +67,7 @@ class PaymentDB(PaymentStored):
                     FROM public.payment p
                     WHERE p.uuid = ?
         '''
-        logging.debug('Select SQL: %s' % select_sql)
+        logging.debug(f"Select SQL: {select_sql}")
         params = (
             self._suuid
         )
