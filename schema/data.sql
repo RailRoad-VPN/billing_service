@@ -1,12 +1,12 @@
-TRUNCATE subscription  CASCADE;
-TRUNCATE subscription_translation CASCADE;
-TRUNCATE subscription_feature CASCADE;
-TRUNCATE subscription_feature_translation CASCADE;
-TRUNCATE payment_type CASCADE;
-TRUNCATE payment CASCADE;
-TRUNCATE order_status CASCADE;
-TRUNCATE "order" CASCADE;
-TRUNCATE user_subscription CASCADE;
+TRUNCATE public.subscription  CASCADE;
+TRUNCATE public.subscription_translation CASCADE;
+TRUNCATE public.subscription_feature CASCADE;
+TRUNCATE public.subscription_feature_translation CASCADE;
+TRUNCATE public.payment_type CASCADE;
+TRUNCATE public.payment CASCADE;
+TRUNCATE public.order_status CASCADE;
+TRUNCATE public."order" CASCADE;
+TRUNCATE public.user_subscription CASCADE;
 
 
 -- subscriptions (1 - FREE, 2 - STARTER, 3 - PRO, 4 - ULTIMATE
@@ -189,15 +189,15 @@ INSERT INTO public.subscription_feature_translation (subscription_feature_id, na
 INSERT INTO public.payment_type (id, name) VALUES (1, 'payproglobal');
 INSERT INTO public.payment_type (id, name) VALUES (2, 'payproglobal_test');
 
-INSERT INTO public.payment (uuid, type_id, created_date) VALUES ('6eaf5278-11c8-47bf-85bb-42345ac9737d', 2, '2018-06-10 18:50:39.791022');
-
 INSERT INTO public.order_status (id, name) VALUES (1, 'new');
 INSERT INTO public.order_status (id, name) VALUES (2, 'processing');
 INSERT INTO public.order_status (id, name) VALUES (3, 'success');
 INSERT INTO public.order_status (id, name) VALUES (4, 'failed');
 
-INSERT INTO public."order" (uuid, code, status_id, payment_uuid, modify_date, modify_reason, created_date) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1, '6eaf5278-11c8-47bf-85bb-42345ac9737d', '2018-06-10 18:50:05.949923', 'init', '2018-06-10 18:50:05.949923');
-INSERT INTO public."order" (uuid, code, status_id, payment_uuid, modify_date, modify_reason, created_date) VALUES ('aad762d8-aab5-4625-969e-398cf3e24274', 2, 1, '6eaf5278-11c8-47bf-85bb-42345ac9737d', '2018-06-10 18:50:05.949923', 'init', '2018-06-10 18:50:05.949923');
+INSERT INTO public."order" (uuid, code, status_id) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1);
 
-INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date, modify_date, modify_reason, created_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 1, 'fbd762d8-fbb5-4625-969e-398cf3e24274', '2018-06-13 22:26:48.036000', '2018-06-13 18:26:52.581000', 'init', '2018-06-13 18:27:08.556405');
-INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date, modify_date, modify_reason, created_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b8', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 2, 'aad762d8-aab5-4625-969e-398cf3e24274', '2018-06-13 22:26:48.036000', '2018-06-13 18:26:52.581000', 'init', '2018-06-13 18:27:08.556405');
+INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 2, 'fbd762d8-fbb5-4625-969e-398cf3e24274', '2019-06-13 22:26:48.036000');
+
+INSERT INTO public.payment (uuid, type_id) VALUES ('6eaf5278-11c8-47bf-85bb-42345ac9737d', 2);
+
+UPDATE public."order" SET status_id = 3, payment_uuid = '6eaf5278-11c8-47bf-85bb-42345ac9737d';
