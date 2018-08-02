@@ -32,7 +32,7 @@ class Payment(object):
 
     def to_api_dict(self):
         return {
-            'uuid': self._suuid,
+            'uuid': str(self._suuid),
             'type_id': self._type_id,
             'created_date': self._created_date,
         }
@@ -57,8 +57,8 @@ class PaymentDB(PaymentStored):
     def __init__(self, storage_service: StorageService, **kwargs):
         super().__init__(storage_service, **kwargs)
 
-    def find_by_id(self):
-        logging.info('PaymentDB find_by_id method')
+    def find_by_uuid(self):
+        logging.info('find_by_uuid method')
         select_sql = '''
                     SELECT
                         p.uuid AS uuid,
@@ -69,7 +69,7 @@ class PaymentDB(PaymentStored):
         '''
         logging.debug(f"Select SQL: {select_sql}")
         params = (
-            self._suuid
+            self._suuid,
         )
         try:
             logging.debug('Call database service')

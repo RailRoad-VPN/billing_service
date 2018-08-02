@@ -1,14 +1,15 @@
+import logging
 import sys
 from http import HTTPStatus
 from typing import List
 
-import logging
 from flask import Response, request
 
-from app.exception import BillingError, PaymentException
+from app.exception import BillingError, PaymentException, PaymentNotFoundException
 from app.model import PaymentType
 from app.model.payments import PaymentDB
 from app.model.payments.payproglobal import PayProGlobalPaymentDB
+from utils import check_uuid
 
 sys.path.insert(0, '../psql_library')
 from storage_service import DBStorageService
@@ -34,9 +35,10 @@ class PaymentsAPI(ResourceAPI):
 
     @staticmethod
     def get_api_urls(base_url: str) -> List[APIResourceURL]:
-        url = "%s/%s" % (base_url, PaymentsAPI.__api_url__)
+        url = f"{base_url}/{PaymentsAPI.__api_url__}"
         api_urls = [
-            APIResourceURL(base_url=url, resource_name='', methods=['GET', 'POST', 'PUT']),
+            APIResourceURL(base_url=url, resource_name='', methods=['POST']),
+            APIResourceURL(base_url=url, resource_name='<string:suuid>', methods=['GET']),
         ]
         return api_urls
 
@@ -99,13 +101,46 @@ class PaymentsAPI(ResourceAPI):
 
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.CREATED)
         resp = make_api_response(data=response_data, http_code=HTTPStatus.CREATED)
-        resp.headers['Location'] = '%s/%s/%s' % (self._config['API_BASE_URI'], self.__api_url__, payment_uuid)
+        resp.headers['Location'] = f"{self._config['API_BASE_URI']}/{self.__api_url__}/{payment_uuid}"
         return resp
 
     def put(self) -> Response:
         resp = make_api_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
         return resp
 
-    def get(self) -> Response:
-        resp = make_api_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
+    def get(self, suuid: str) -> Response:
+        super(PaymentsAPI, self).get(req=request)
+
+        payment_db = PaymentDB(storage_service=self.__db_storage_service, suuid=suuid, limit=self.pagination.limit,
+                               offset=self.pagination.offset)
+
+        is_valid = check_uuid(suuid)
+        if not is_valid:
+            return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
+
+        try:
+            payment = payment_db.find_by_uuid()
+        except PaymentNotFoundException as e:
+            logging.error(e)
+            error_code = e.error_code
+            error = e.error
+            developer_message = e.developer_message
+            http_code = HTTPStatus.NOT_FOUND
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
+                                        developer_message=developer_message, error_code=error_code)
+            return make_api_response(data=response_data, http_code=http_code)
+        except PaymentException as e:
+            logging.error(e)
+            error_code = e.error_code
+            error = e.error
+            developer_message = e.developer_message
+            http_code = HTTPStatus.BAD_REQUEST
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=http_code, error=error,
+                                        developer_message=developer_message, error_code=error_code)
+            return make_api_response(data=response_data, http_code=http_code)
+
+        response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.OK,
+                                    data=payment.to_api_dict())
+        resp = make_api_response(data=response_data, http_code=HTTPStatus.OK)
+
         return resp
