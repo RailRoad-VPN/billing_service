@@ -87,7 +87,7 @@ class OrdersAPI(ResourceAPI):
 
         response_data = APIResponse(status=APIResponseStatus.success.status, code=HTTPStatus.CREATED)
         resp = make_api_response(data=response_data, http_code=HTTPStatus.CREATED)
-        resp.headers['Location'] = '%s/%s/%s' % (self._config['API_BASE_URI'], self.__api_url__, suuid)
+        resp.headers['Location'] = f"{self._config['API_BASE_URI']}/{self.__api_url__}/uuid/{suuid}"
         return resp
 
     def put(self, suuid: str) -> Response:
