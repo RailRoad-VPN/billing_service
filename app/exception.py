@@ -70,6 +70,12 @@ class BillingError(APIErrorEnum):
 
     BAD_ACCEPT_LANGUAGE_HEADER = (name + str(count()), 'BAD_ACCEPT_LANGUAGE_HEADER phrase', 'BAD_ACCEPT_LANGUAGE_HEADER description')
 
+    ORDERPAYMENT_FIND_ERROR_DB = (name + str(count()), 'ORDERPAYMENT_FIND_ERROR_DB phrase', 'ORDERPAYMENT_FIND_ERROR_DB description')
+    ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB = (name + str(count()), 'ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB phrase', 'ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB description')
+    ORDERPAYMENT_FIND_BY_PAYMENT_ERROR = (name + str(count()), 'ORDERPAYMENT_FIND_BY_PAYMENT_ERROR phrase', 'ORDERPAYMENT_FIND_BY_PAYMENT_ERROR description')
+    ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB = (name + str(count()), 'ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB phrase', 'ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB description')
+    ORDERPAYMENT_CREATE_ERROR_DB = (name + str(count()), 'ORDERPAYMENT_CREATE_ERROR_DB phrase', 'ORDERPAYMENT_CREATE_ERROR_DB description')
+
 
 class BillingException(Exception):
     __version__ = 1
@@ -135,6 +141,34 @@ class OrderException(BillingException):
 
 
 class OrderNotFoundException(OrderException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class OrderPaymentException(BillingException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class OrderPaymentNotFoundException(OrderPaymentException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class PPGPaymentException(BillingException):
+    __version__ = 1
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+class PPGPaymentNotFoundException(PPGPaymentException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):

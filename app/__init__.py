@@ -6,7 +6,7 @@ from http import HTTPStatus
 from flask import Flask, request
 
 from app.resources.orders import OrdersAPI
-from app.resources.payments import PaymentsAPI
+from app.resources.orders.payments import OrderPaymentsAPI
 from app.resources.subscriptions import SubscriptionsAPI
 from app.resources.users.subscriptions import UserSubscriptionsAPI
 
@@ -39,7 +39,7 @@ api_base_uri = app_config['API_BASE_URI']
 
 apis = [
     {'cls': OrdersAPI, 'args': [db_storage_service, app_config]},
-    {'cls': PaymentsAPI, 'args': [db_storage_service, app_config]},
+    {'cls': OrderPaymentsAPI, 'args': [db_storage_service, app_config]},
     {'cls': SubscriptionsAPI, 'args': [db_storage_service, app_config]},
     {'cls': UserSubscriptionsAPI, 'args': [db_storage_service, app_config]},
 ]

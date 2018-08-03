@@ -4,7 +4,7 @@ import sys
 
 from psycopg2._psycopg import DatabaseError
 
-from app.exception import BillingError, PaymentException, BillingNotFoundException, PaymentException
+from app.exception import BillingError, PPGPaymentException, PPGPaymentNotFoundException
 
 sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
@@ -29,8 +29,8 @@ class PayProGlobalPayment(object):
 
     def to_dict(self):
         return {
-            'sid': self._sid,
-            'payment_suuid': self._payment_suuid,
+            'id': self._sid,
+            'payment_uuid': str(self._payment_suuid),
             'order_id': self._order_id,
             'json_data': self._json_data,
             'created_date': self._created_date,
@@ -38,8 +38,8 @@ class PayProGlobalPayment(object):
 
     def to_api_dict(self):
         return {
-            'sid': self._sid,
-            'payment_suuid': self._payment_suuid,
+            'id': self._sid,
+            'payment_uuid': str(self._payment_suuid),
             'order_id': self._order_id,
             'json_data': self._json_data,
             'created_date': self._created_date,
@@ -49,7 +49,8 @@ class PayProGlobalPayment(object):
 class PayProGlobalPaymentStored(StoredObject, PayProGlobalPayment):
     __version__ = 1
 
-    def __init__(self, storage_service: StorageService, sid: int = None, payment_suuid: str = None, order_id: int = None,
+    def __init__(self, storage_service: StorageService, sid: int = None, payment_suuid: str = None,
+                 order_id: int = None,
                  json_data: str = None, created_date: datetime = None,
                  limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
@@ -60,7 +61,7 @@ class PayProGlobalPaymentStored(StoredObject, PayProGlobalPayment):
 class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
     __version__ = 1
 
-    _sid_field = 'sid'
+    _sid_field = 'id'
     _payment_suuid_field = 'payment_uuid'
     _order_id_field = 'order_id'
     _json_data_field = 'json_data'
@@ -90,7 +91,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
 
         try:
             logging.debug('Call database service')
-            self._sid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0]
+            self._sid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0].get(self._sid_field)
         except DatabaseError as e:
             self._storage_service.rollback()
             logging.error(e)
@@ -104,7 +105,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                                 "Code: %s . %s" % (
                                     BillingError.PPG_PAYMENT_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
         logging.debug('PayProGlobalPaymentDB created.')
 
         return self._sid
@@ -147,13 +148,13 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                                 "Code: %s . %s" % (
                                     BillingError.PPG_PAYMENT_UPDATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             error_code = BillingError.PPG_PAYMENT_UPDATE_ERROR_DB.code
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
     def find_by_payment_suuid(self):
         logging.info('PayProGlobalPayment find_by_payment_suuid method')
         select_sql = '''
                     SELECT 
-                          ppgp.id AS sid,
+                          ppgp.id AS id,
                           ppgp.payment_uuid AS payment_uuid,
                           ppgp.order_id AS order_id,
                           ppgp.json_data AS json_data,
@@ -162,7 +163,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                       WHERE ppgp.payment_uuid = ?
         '''
 
-        logging.debug(f"Select SQL: {select_sql}")
+        logging.debug(f"select SQL: {select_sql}")
         params = (self._payment_suuid,)
 
         try:
@@ -180,7 +181,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
                                 "Code: %s . %s" % (
                                     BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         if len(ppg_payment_list_db) == 1:
             ppg_payment_db = ppg_payment_list_db[0]
@@ -188,14 +189,14 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
             error_message = BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.message
             error_code = BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.code
             developer_message = BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.developer_message
-            raise BillingNotFoundException(error=error_message, error_code=error_code,
-                                           developer_message=developer_message)
+            raise PPGPaymentNotFoundException(error=error_message, error_code=error_code,
+                                              developer_message=developer_message)
         else:
             error_message = BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.message
             developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
                                 "really bad with database." % BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.developer_message
             error_code = BillingError.PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR.code
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         return self.__mappayproglobalpaymentdb_to_payproglobalpayment(ppg_payment_db)
 
@@ -203,7 +204,7 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
         logging.info('PayProGlobalPayment find_by_order_id method')
         select_sql = '''
                     SELECT 
-                          ppgp.id AS sid,
+                          ppgp.id AS id,
                           ppgp.payment_uuid AS payment_uuid,
                           ppgp.order_id AS order_id,
                           ppgp.json_data AS json_data,
@@ -228,8 +229,9 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
             error_code = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+                                    BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB.developer_message, e.pgcode,
+                                    e.pgerror)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         if len(ppg_payment_list_db) == 1:
             ppg_payment_db = ppg_payment_list_db[0]
@@ -237,14 +239,14 @@ class PayProGlobalPaymentDB(PayProGlobalPaymentStored):
             error_message = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.message
             error_code = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.code
             developer_message = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.developer_message
-            raise BillingNotFoundException(error=error_message, error_code=error_code,
-                                           developer_message=developer_message)
+            raise PPGPaymentNotFoundException(error=error_message, error_code=error_code,
+                                              developer_message=developer_message)
         else:
             error_message = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.message
             developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
                                 "really bad with database." % BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.developer_message
             error_code = BillingError.PPG_PAYMENT_FIND_BY_ORDERID_ERROR.code
-            raise PaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
+            raise PPGPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         return self.__mappayproglobalpaymentdb_to_payproglobalpayment(ppg_payment_db)
 

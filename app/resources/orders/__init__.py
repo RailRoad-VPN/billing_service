@@ -53,7 +53,6 @@ class OrdersAPI(ResourceAPI):
 
         code = request_json.get(OrderDB._code_field, None)
         status_id = request_json.get(OrderDB._status_id_field, None)
-        payment_uuid = request_json.get(OrderDB._payment_uuid_field, None)
 
         req_fields = {
             'status_id': status_id,
@@ -66,8 +65,7 @@ class OrdersAPI(ResourceAPI):
             resp = make_api_response(data=response_data, http_code=response_data.code)
             return resp
 
-        order_db = OrderDB(storage_service=self.__db_storage_service, code=code, status_id=status_id,
-                           payment_uuid=payment_uuid)
+        order_db = OrderDB(storage_service=self.__db_storage_service, code=code, status_id=status_id)
 
         try:
             order_db.find_by_code()
@@ -105,7 +103,6 @@ class OrdersAPI(ResourceAPI):
 
         code = request_json.get(OrderDB._code_field, None)
         status_id = request_json.get(OrderDB._status_id_field)
-        payment_uuid = request_json.get(OrderDB._payment_uuid_field)
         modify_reason = request_json.get(OrderDB._modify_reason_field)
 
         req_fields = {
@@ -122,7 +119,7 @@ class OrdersAPI(ResourceAPI):
             return resp
 
         order_db = OrderDB(storage_service=self.__db_storage_service, suuid=suuid, code=code, status_id=status_id,
-                           payment_uuid=payment_uuid, modify_reason=modify_reason)
+                           modify_reason=modify_reason)
 
         try:
             order_db.find_by_code()

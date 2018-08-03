@@ -16,8 +16,8 @@ DROP TABLE IF EXISTS public.user_subscription CASCADE;
 DROP TABLE IF EXISTS public.order_status CASCADE;
 DROP TABLE IF EXISTS public.order CASCADE;
 DROP TABLE IF EXISTS public.payment_type CASCADE;
-DROP TABLE IF EXISTS public.payment CASCADE;
 DROP TABLE IF EXISTS public.ppg_payment CASCADE;
+DROP TABLE IF EXISTS public.order_payment CASCADE;
 DROP TABLE IF EXISTS public.subscription CASCADE;
 DROP TABLE IF EXISTS public.subscription_translation CASCADE;
 DROP TABLE IF EXISTS public.subscription_feature CASCADE;
@@ -73,13 +73,6 @@ CREATE TABLE public.payment_type
   , name VARCHAR(100)
 );
 
-CREATE TABLE public.payment
-(
-    uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
-  , type_id INT REFERENCES public.payment_type(id) NOT NULL
-  , created_date TIMESTAMP NOT NULL DEFAULT now()
-);
-
 CREATE TABLE public.order_status
 (
     id SERIAL PRIMARY KEY
@@ -91,9 +84,16 @@ CREATE TABLE public.order
     uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
   , code SERIAL UNIQUE
   , status_id INT REFERENCES public.order_status(id) NOT NULL
-  , payment_uuid UUID REFERENCES public.payment(uuid)
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'
+  , created_date TIMESTAMP NOT NULL DEFAULT now()
+);
+
+CREATE TABLE public.order_payment
+(
+    payment_uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
+  , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
+  , type_id INT REFERENCES public.payment_type(id) NOT NULL
   , created_date TIMESTAMP NOT NULL DEFAULT now()
 );
 
@@ -112,7 +112,7 @@ CREATE TABLE public.user_subscription
 CREATE TABLE public.ppg_payment
 (
     id SERIAL PRIMARY KEY
-  , payment_uuid UUID REFERENCES public.payment(uuid) NOT NULL
+  , payment_uuid UUID REFERENCES public.order_payment(payment_uuid) NOT NULL
   , order_id BIGINT UNIQUE
   , json_data JSON NOT NULL
   , created_date TIMESTAMP NOT NULL DEFAULT now()

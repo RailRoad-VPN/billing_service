@@ -3,7 +3,6 @@ TRUNCATE public.subscription_translation CASCADE;
 TRUNCATE public.subscription_feature CASCADE;
 TRUNCATE public.subscription_feature_translation CASCADE;
 TRUNCATE public.payment_type CASCADE;
-TRUNCATE public.payment CASCADE;
 TRUNCATE public.order_status CASCADE;
 TRUNCATE public."order" CASCADE;
 TRUNCATE public.user_subscription CASCADE;
@@ -197,7 +196,3 @@ INSERT INTO public.order_status (id, name) VALUES (4, 'failed');
 INSERT INTO public."order" (uuid, code, status_id) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1);
 
 INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, expire_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 2, 'fbd762d8-fbb5-4625-969e-398cf3e24274', '2019-06-13 22:26:48.036000');
-
-INSERT INTO public.payment (uuid, type_id) VALUES ('6eaf5278-11c8-47bf-85bb-42345ac9737d', 2);
-
-UPDATE public."order" SET status_id = 3, payment_uuid = '6eaf5278-11c8-47bf-85bb-42345ac9737d';
