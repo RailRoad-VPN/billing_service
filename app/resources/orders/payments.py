@@ -85,7 +85,7 @@ class OrderPaymentsAPI(ResourceAPI):
 
         logger.debug("create order_payment_db instance")
         order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid,
-                                          type_id=type_id)
+                                          status_id=status_id, type_id=type_id, json_data=json_data)
 
         try:
             logger.debug("create order_payment in database")
