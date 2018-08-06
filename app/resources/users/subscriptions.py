@@ -136,7 +136,7 @@ class UserSubscriptionsAPI(ResourceAPI):
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, suuid=us_uuid,
                                                   user_uuid=user_uuid, subscription_id=subscription_id,
                                                   expire_date=expire_date, order_uuid=order_uuid,
-                                                  modify_reason=modify_reason)
+                                                  modify_reason=modify_reason, status_id=status_id)
         try:
             user_subscription_db.find_by_uuid()
         except UserSubscriptionNotFoundException as e:
