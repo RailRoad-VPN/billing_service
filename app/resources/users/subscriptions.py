@@ -54,17 +54,22 @@ class UserSubscriptionsAPI(ResourceAPI):
             return make_error_request_response(HTTPStatus.NOT_FOUND, err=BillingError.BAD_IDENTITY_ERROR)
 
         user_uuid = request_json.get(UserSubscriptionDB._user_uuid_field, None)
-        subscription_id = int(request_json.get(UserSubscriptionDB._subscription_id_field, None))
-        status_id = int(request_json.get(UserSubscriptionDB._status_id_field, None))
+        subscription_id = request_json.get(UserSubscriptionDB._subscription_id_field, None)
+        status_id = request_json.get(UserSubscriptionDB._status_id_field, None)
         expire_date = request_json.get(UserSubscriptionDB._expire_date_field, None)
         order_uuid = request_json.get(UserSubscriptionDB._order_uuid_field, None)
 
-        req_fields = {
-            'user_uuid': user_uuid,
-            'status_id': status_id,
-            'subscription_id': subscription_id,
-            'order_uuid': order_uuid,
-        }
+        try:
+            req_fields = {
+                'user_uuid': user_uuid,
+                'status_id': status_id,
+                'subscription_id': subscription_id,
+                'order_uuid': order_uuid,
+            }
+        except TypeError:
+            response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST)
+            resp = make_api_response(data=response_data, http_code=response_data.code)
+            return resp
 
         error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
@@ -74,8 +79,8 @@ class UserSubscriptionsAPI(ResourceAPI):
             return resp
 
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, user_uuid=user_uuid,
-                                                  subscription_id=subscription_id, expire_date=expire_date,
-                                                  order_uuid=order_uuid)
+                                                  status_id=status_id, subscription_id=subscription_id,
+                                                  expire_date=expire_date, order_uuid=order_uuid)
 
         try:
             user_subscription_uuid = user_subscription_db.create()
