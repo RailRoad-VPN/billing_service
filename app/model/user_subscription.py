@@ -252,7 +252,6 @@ class UserSubscriptionDB(UserSubscriptionStored):
                         status_id = ?,
                         expire_date = ?,
                         order_uuid = ?,
-                        modify_date = ?,
                         modify_reason = ?
                     WHERE uuid = ?
                     '''
@@ -265,7 +264,6 @@ class UserSubscriptionDB(UserSubscriptionStored):
             self._status_id,
             self._expire_date,
             self._order_uuid,
-            self._modify_date,
             self._modify_reason,
             self._suuid,
         )
