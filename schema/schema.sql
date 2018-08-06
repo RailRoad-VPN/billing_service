@@ -13,10 +13,11 @@ SET default_with_oids = FALSE;
 -- CREATE EXTENSION pgcrypto;
 
 DROP TABLE IF EXISTS public.user_subscription CASCADE;
+DROP TABLE IF EXISTS public.user_subscription_status CASCADE;
 DROP TABLE IF EXISTS public.order_status CASCADE;
 DROP TABLE IF EXISTS public.order CASCADE;
 DROP TABLE IF EXISTS public.payment_type CASCADE;
-DROP TABLE IF EXISTS public.ppg_payment CASCADE;
+DROP TABLE IF EXISTS public.payment_status CASCADE;
 DROP TABLE IF EXISTS public.order_payment CASCADE;
 DROP TABLE IF EXISTS public.subscription CASCADE;
 DROP TABLE IF EXISTS public.subscription_translation CASCADE;
@@ -79,6 +80,18 @@ CREATE TABLE public.order_status
   , name VARCHAR(100)
 );
 
+CREATE TABLE public.payment_status
+(
+    id SERIAL PRIMARY KEY
+  , name VARCHAR(100)
+);
+
+CREATE TABLE public.user_subscription_status
+(
+    id SERIAL PRIMARY KEY
+  , name VARCHAR(100)
+);
+
 CREATE TABLE public.order
 (
     uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
@@ -91,9 +104,11 @@ CREATE TABLE public.order
 
 CREATE TABLE public.order_payment
 (
-    payment_uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
+    uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
   , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
   , type_id INT REFERENCES public.payment_type(id) NOT NULL
+  , status_id INT REFERENCES public.payment_status(id) NOT NULL
+  , json_data JSON NOT NULL
   , created_date TIMESTAMP NOT NULL DEFAULT now()
 );
 
@@ -103,17 +118,9 @@ CREATE TABLE public.user_subscription
   , user_uuid UUID NOT NULL
   , subscription_id INT REFERENCES public.subscription(id) NOT NULL
   , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
+  , status_id INT REFERENCES public.user_subscription_status(id) NOT NULL
   , expire_date TIMESTAMP NOT NULL
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'
-  , created_date TIMESTAMP NOT NULL DEFAULT now()
-);
-
-CREATE TABLE public.ppg_payment
-(
-    id SERIAL PRIMARY KEY
-  , payment_uuid UUID REFERENCES public.order_payment(payment_uuid) NOT NULL
-  , order_id BIGINT UNIQUE
-  , json_data JSON NOT NULL
   , created_date TIMESTAMP NOT NULL DEFAULT now()
 );

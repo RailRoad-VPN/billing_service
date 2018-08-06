@@ -9,7 +9,7 @@ sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
 
 
-class OrderStatus(object):
+class PaymentStatus(object):
     __version__ = 1
 
     _sid = None
@@ -32,16 +32,16 @@ class OrderStatus(object):
         }
 
 
-class OrderStatusStored(StoredObject, OrderStatus):
+class PaymentStatusStored(StoredObject, PaymentStatus):
     __version__ = 1
 
     def __init__(self, storage_service: StorageService, sid: int = None, name: int = None, limit: int = None,
                  offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        OrderStatus.__init__(self, sid=sid, name=name)
+        PaymentStatus.__init__(self, sid=sid, name=name)
 
 
-class OrderStatusDB(OrderStatusStored):
+class PaymentStatusDB(PaymentStatusStored):
     __version__ = 1
 
     _sid_field = 'id'
@@ -51,39 +51,39 @@ class OrderStatusDB(OrderStatusStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('OrderStatus find method')
+        logging.info('PaymentStatus find method')
         select_sql = '''
                       SELECT 
                         id,
                         name
-                      FROM public.order_status
+                      FROM public.payment_status
                       '''
         logging.debug(f"Select SQL: {select_sql}")
 
         try:
             logging.debug('Call database service')
-            order_status_list_db = self._storage_service.get(sql=select_sql)
+            payment_status_list_db = self._storage_service.get(sql=select_sql)
         except DatabaseError as e:
             logging.error(e)
-            error_message = BillingError.ORDERSTATUS_FIND_ERROR_DB.message
-            error_code = BillingError.ORDERSTATUS_FIND_ERROR_DB.code
+            error_message = BillingError.PAYMENTSTATUS_FIND_ERROR_DB.message
+            error_code = BillingError.PAYMENTSTATUS_FIND_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.ORDERSTATUS_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.PAYMENTSTATUS_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)
-        order_status_list = []
+        payment_status_list = []
 
-        for order_status_db in order_status_list_db:
-            order_status = self.__map_order_statusdb_to_order_status(order_status_db)
-            order_status_list.append(order_status)
+        for payment_status_db in payment_status_list_db:
+            payment_status = self.__map_payment_statusdb_to_payment_status(payment_status_db)
+            payment_status_list.append(payment_status)
 
-        if len(order_status_list) == 0:
-            logging.warning('Empty OrderStatus list of method find. Very strange behaviour.')
+        if len(payment_status_list) == 0:
+            logging.warning('Empty PaymentStatus list of method find. Very strange behaviour.')
 
-        return order_status_list
+        return payment_status_list
 
-    def __map_order_statusdb_to_order_status(self, order_status_db):
-        return OrderStatus(
-            sid=order_status_db[self._sid_field],
-            name=order_status_db[self._name_field],
+    def __map_payment_statusdb_to_payment_status(self, payment_status_db):
+        return PaymentStatus(
+            sid=payment_status_db[self._sid_field],
+            name=payment_status_db[self._name_field],
         )

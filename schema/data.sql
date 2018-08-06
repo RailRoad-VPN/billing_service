@@ -194,6 +194,15 @@ INSERT INTO public.order_status (id, name) VALUES (2, 'processing');
 INSERT INTO public.order_status (id, name) VALUES (3, 'success');
 INSERT INTO public.order_status (id, name) VALUES (4, 'failed');
 
+INSERT INTO public.payment_status (id, name) VALUES (1, 'success');
+INSERT INTO public.payment_status (id, name) VALUES (2, 'failed');
+INSERT INTO public.payment_status (id, name) VALUES (3, 'processing');
+
+INSERT INTO public.user_subscription_status (id, name) VALUES (1, 'active');
+INSERT INTO public.user_subscription_status (id, name) VALUES (2, 'inactive');
+INSERT INTO public.user_subscription_status (id, name) VALUES (3, 'expired');
+INSERT INTO public.user_subscription_status (id, name) VALUES (4, 'waiting for payment');
+
 INSERT INTO public."order" (uuid, code, status_id) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 3);
 INSERT INTO public.order_payment (payment_uuid, order_uuid, type_id, created_date) VALUES ('34bd42e9-aadd-4eab-8038-c272f38ea48a', 'fbd762d8-fbb5-4625-969e-398cf3e24274', 1, '2018-08-03 17:34:22.704861');
 

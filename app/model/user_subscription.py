@@ -16,18 +16,20 @@ class UserSubscription(object):
     _suuid = None
     _user_uuid = None
     _subscription_id = None
+    _status_id = None
     _expire_date = None
     _order_uuid = None
     _modify_date = None
     _modify_reason = None
     _created_date = None
 
-    def __init__(self, suuid: str = None, user_uuid: str = None, subscription_id: int = None,
+    def __init__(self, suuid: str = None, user_uuid: str = None, subscription_id: int = None, status_id: int = None,
                  expire_date: datetime = None, order_uuid: str = None, modify_date: datetime = None,
                  modify_reason: str = None, created_date: datetime = None):
         self._suuid = suuid
         self._user_uuid = user_uuid
         self._subscription_id = subscription_id
+        self._status_id = status_id
         if expire_date:
             self._expire_date = expire_date
         else:
@@ -55,6 +57,7 @@ class UserSubscription(object):
             'uuid': str(self._suuid),
             'user_uuid': str(self._user_uuid),
             'subscription_id': self._subscription_id,
+            'status_id': self._status_id,
             'expire_date': self._expire_date,
             'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
@@ -67,6 +70,7 @@ class UserSubscription(object):
             'uuid': str(self._suuid),
             'user_uuid': str(self._user_uuid),
             'subscription_id': self._subscription_id,
+            'status_id': self._status_id,
             'expire_date': self._expire_date,
             'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
@@ -78,14 +82,14 @@ class UserSubscription(object):
 class UserSubscriptionStored(StoredObject, UserSubscription):
     __version__ = 1
 
-    def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None,
+    def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None, status_id: int = None,
                  subscription_id: int = None, expire_date: datetime = None, order_uuid: str = None,
                  modify_date: datetime = None, modify_reason: str = None, created_date: datetime = None,
                  limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
         UserSubscription.__init__(self, suuid=suuid, user_uuid=user_uuid, subscription_id=subscription_id,
                                   expire_date=expire_date, modify_date=modify_date, modify_reason=modify_reason,
-                                  order_uuid=order_uuid, created_date=created_date)
+                                  order_uuid=order_uuid, created_date=created_date, status_id=status_id)
 
 
 class UserSubscriptionDB(UserSubscriptionStored):
@@ -94,6 +98,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
     _suuid_field = 'uuid'
     _user_uuid_field = 'user_uuid'
     _subscription_id_field = 'subscription_id'
+    _status_id_field = 'status_id'
     _expire_date_field = 'expire_date'
     _order_uuid_field = 'order_uuid'
     _modify_date_field = 'modify_date'
@@ -110,6 +115,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                         us.uuid AS uuid,
                         us.user_uuid AS user_uuid,
                         us.subscription_id AS subscription_id,
+                        us.status_id AS status_id,
                         to_json(us.expire_date) AS expire_date,
                         us.order_uuid AS order_uuid,
                         us.modify_reason AS modify_reason,
@@ -160,6 +166,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                         us.uuid AS uuid,
                         us.user_uuid AS user_uuid,
                         us.subscription_id AS subscription_id,
+                        us.status_id AS status_id,
                         to_json(us.expire_date) AS expire_date,
                         us.order_uuid AS order_uuid,
                         us.modify_reason AS modify_reason,
@@ -196,9 +203,9 @@ class UserSubscriptionDB(UserSubscriptionStored):
         logging.info('UserSubscriptionDB create method')
         insert_sql = '''
                       INSERT INTO public.user_subscription
-                        (user_uuid, expire_date, subscription_id, order_uuid)
+                        (user_uuid, expire_date, subscription_id, order_uuid, status_id)
                       VALUES 
-                        (?, ?, ?, ?)
+                        (?, ?, ?, ?, ?)
                       RETURNING uuid
                      '''
         insert_params = (
@@ -206,6 +213,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             self._expire_date,
             self._subscription_id,
             self._order_uuid,
+            self._status_id,
         )
         logging.debug('Create UserSubscriptionDB SQL : %s' % insert_sql)
 
@@ -241,6 +249,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     SET
                         user_uuid = ?,
                         subscription_id = ?,
+                        status_id = ?,
                         expire_date = ?,
                         order_uuid = ?,
                         modify_date = ?,
@@ -253,6 +262,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         update_params = (
             self._user_uuid,
             self._subscription_id,
+            self._status_id,
             self._expire_date,
             self._order_uuid,
             self._modify_date,
@@ -284,6 +294,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             suuid=user_subscription_db[self._suuid_field],
             user_uuid=user_subscription_db[self._user_uuid_field],
             subscription_id=user_subscription_db[self._subscription_id_field],
+            status_id=user_subscription_db[self._status_id_field],
             expire_date=user_subscription_db[self._expire_date_field],
             order_uuid=user_subscription_db[self._order_uuid_field],
             modify_date=user_subscription_db[self._modify_date_field],

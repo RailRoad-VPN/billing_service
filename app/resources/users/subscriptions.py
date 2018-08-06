@@ -3,7 +3,6 @@ import sys
 from http import HTTPStatus
 from typing import List
 
-import datetime
 from flask import Response, request
 
 from app.exception import UserSubscriptionException, BillingError, UserSubscriptionNotFoundException
@@ -15,7 +14,8 @@ from storage_service import DBStorageService
 sys.path.insert(0, '../rest_api_library')
 from api import ResourceAPI
 from utils import check_uuid
-from response import APIResponseStatus, APIResponse, make_api_response, make_error_request_response, check_required_api_fields
+from response import APIResponseStatus, APIResponse, make_api_response, make_error_request_response, \
+    check_required_api_fields
 from rest import APIResourceURL
 
 
@@ -55,11 +55,13 @@ class UserSubscriptionsAPI(ResourceAPI):
 
         user_uuid = request_json.get(UserSubscriptionDB._user_uuid_field, None)
         subscription_id = int(request_json.get(UserSubscriptionDB._subscription_id_field, None))
+        status_id = int(request_json.get(UserSubscriptionDB._status_id_field, None))
         expire_date = request_json.get(UserSubscriptionDB._expire_date_field, None)
         order_uuid = request_json.get(UserSubscriptionDB._order_uuid_field, None)
 
         req_fields = {
             'user_uuid': user_uuid,
+            'status_id': status_id,
             'subscription_id': subscription_id,
             'order_uuid': order_uuid,
         }
@@ -103,19 +105,19 @@ class UserSubscriptionsAPI(ResourceAPI):
         if not is_valid_a or not is_valid_b or not is_valid_c or (user_subscription_uuid != us_uuid):
             return make_error_request_response(HTTPStatus.NOT_FOUND, err=BillingError.BAD_IDENTITY_ERROR)
 
-        user_uuid = request_json.get('user_uuid', None)
-        subscription_id = request_json.get('subscription_id', None)
-        expire_date = request_json.get('expire_date', None)
-        order_uuid = request_json.get('order_uuid', None)
-        modify_date = request_json.get('modify_date', None)
-        modify_reason = request_json.get('modify_reason', None)
+        user_uuid = request_json.get(UserSubscriptionDB._user_uuid_field, None)
+        subscription_id = request_json.get(UserSubscriptionDB._subscription_id_field, None)
+        status_id = request_json.get(UserSubscriptionDB._status_id_field, None)
+        expire_date = request_json.get(UserSubscriptionDB._expire_date_field, None)
+        order_uuid = request_json.get(UserSubscriptionDB._order_uuid_field, None)
+        modify_reason = request_json.get(UserSubscriptionDB._modify_reason_field, None)
 
         req_fields = {
             'user_uuid': user_uuid,
             'subscription_id': subscription_id,
+            'status_id': status_id,
             'expire_date': expire_date,
             'order_uuid': order_uuid,
-            'modify_date': modify_date,
             'modify_reason': modify_reason,
         }
 
@@ -129,7 +131,7 @@ class UserSubscriptionsAPI(ResourceAPI):
         user_subscription_db = UserSubscriptionDB(storage_service=self.__db_storage_service, suuid=us_uuid,
                                                   user_uuid=user_uuid, subscription_id=subscription_id,
                                                   expire_date=expire_date, order_uuid=order_uuid,
-                                                  modify_date=modify_date, modify_reason=modify_reason)
+                                                  modify_reason=modify_reason)
         try:
             user_subscription_db.find_by_uuid()
         except UserSubscriptionNotFoundException as e:

@@ -1,6 +1,5 @@
 import datetime
 import logging
-import sys
 
 from psycopg2._psycopg import DatabaseError
 
@@ -198,7 +197,8 @@ class SubscriptionDB(SubscriptionStored):
             error_code = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.code
             developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
                                 "Code: %s . %s" % (
-                                    BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
+                                    BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR_DB.developer_message, e.pgcode,
+                                    e.pgerror)
             raise SubscriptionException(error=error_message, error_code=error_code, developer_message=developer_message)
 
         if len(subscription_list_db) == 1:
@@ -214,7 +214,7 @@ class SubscriptionDB(SubscriptionStored):
             developer_message = "%s. Find by specified uuid return more than 1 object. This is CAN NOT be! Something " \
                                 "really bad with database." % BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.developer_message
             error_code = BillingError.SUBSCRIPTION_FIND_BY_ID_ERROR.code
-            raise BillingError(message=error_message, code=error_code, developer_message=developer_message)
+            raise SubscriptionException(message=error_message, code=error_code, developer_message=developer_message)
 
         return self.__mapsubscriptiondb_to_subscription(subscription_db=subscription_db)
 

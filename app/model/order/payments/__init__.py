@@ -13,31 +13,39 @@ from storage_service import StorageService, StoredObject
 class OrderPayment(object):
     __version__ = 1
 
-    _payment_uuid = None
+    _suuid = None
     _order_uuid = None
     _created_date = None
     _type_id = None
+    _json_data = None
+    _status_id = None
 
-    def __init__(self, order_uuid: str = None, payment_uuid: str = None, type_id: int = None,
-                 created_date: datetime = None):
-        self._payment_uuid = payment_uuid
+    def __init__(self, suuid: str = None, order_uuid: str = None, type_id: int = None, status_id: int = None,
+                 json_data: str = None, created_date: datetime = None):
+        self._suuid = suuid
         self._order_uuid = order_uuid
         self._type_id = type_id
+        self._status_id = status_id
+        self._json_data = json_data
         self._created_date = created_date
 
     def to_dict(self):
         return {
-            'payment_uuid': self._payment_uuid,
+            'uuid': self._suuid,
             'order_uuid': self._order_uuid,
             'type_id': self._type_id,
+            'status_id': self._status_id,
+            'json_data': self._json_data,
             'created_date': self._created_date,
         }
 
     def to_api_dict(self):
         return {
-            'payment_uuid': str(self._payment_uuid),
+            'uuid': str(self._suuid),
             'order_uuid': str(self._order_uuid),
             'type_id': self._type_id,
+            'status_id': self._status_id,
+            'json_data': self._json_data,
             'created_date': self._created_date,
         }
 
@@ -45,19 +53,22 @@ class OrderPayment(object):
 class OrderPaymentStored(StoredObject, OrderPayment):
     __version__ = 1
 
-    def __init__(self, storage_service: StorageService, payment_uuid: str = None, order_uuid: str = None,
-                 type_id: str = None, created_date: datetime = None, limit: int = None, offset: int = None, **kwargs):
+    def __init__(self, storage_service: StorageService, suuid: str = None, order_uuid: str = None,
+                 type_id: str = None, status_id: int = None, json_data: str = None, created_date: datetime = None, limit: int = None,
+                 offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        OrderPayment.__init__(self, order_uuid=order_uuid, payment_uuid=payment_uuid, type_id=type_id,
-                              created_date=created_date)
+        OrderPayment.__init__(self, suuid=suuid, order_uuid=order_uuid, type_id=type_id, status_id=status_id,
+                              json_data=json_data, created_date=created_date)
 
 
 class OrderPaymentDB(OrderPaymentStored):
     __version__ = 1
 
-    _payment_uuid_field = 'payment_uuid'
+    _suuid_field = 'uuid'
     _order_uuid_field = 'order_uuid'
     _type_id_field = 'type_id'
+    _status_id_field = 'status_id'
+    _json_data_field = 'json_data'
     _created_date_field = 'created_date'
 
     def __init__(self, storage_service: StorageService, **kwargs):
@@ -66,9 +77,11 @@ class OrderPaymentDB(OrderPaymentStored):
     def find(self):
         logging.info('OrderPaymentDB find method')
         select_sql = '''
-                    SELECT op.payment_uuid AS payment_uuid,
+                    SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
                            op.type_id AS type_id,
+                           op.status_id AS status_id,
+                           op.json_data AS json_data,
                            to_json(op.created_date) AS created_date
                     FROM public.order_payment op
                       '''
@@ -98,16 +111,18 @@ class OrderPaymentDB(OrderPaymentStored):
     def find_by_payment(self):
         logging.info('OrderPaymentDB find_by_order method')
         select_sql = '''
-                    SELECT op.payment_uuid AS payment_uuid,
+                    SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
                            op.type_id AS type_id,
+                           op.status_id AS status_id,
+                           op.json_data AS json_data,
                            to_json(op.created_date) AS created_date
                     FROM public.order_payment op
-                    WHERE op.payment_uuid = ?
+                    WHERE op.uuid = ?
         '''
         logging.debug(f"Select SQL: {select_sql}")
         params = (
-            self._payment_uuid,
+            self._suuid,
         )
         try:
             logging.debug('Call database service')
@@ -142,9 +157,11 @@ class OrderPaymentDB(OrderPaymentStored):
     def find_by_order(self):
         logging.info('OrderPaymentDB find_by_order method')
         select_sql = '''
-                    SELECT op.payment_uuid AS payment_uuid,
+                    SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
                            op.type_id AS type_id,
+                           op.status_id AS status_id,
+                           op.json_data AS json_data,
                            to_json(op.created_date) AS created_date
                     FROM public.order_payment op
                     WHERE op.order_uuid = ?
@@ -177,20 +194,22 @@ class OrderPaymentDB(OrderPaymentStored):
         logging.info('OrderPaymentDB create method')
         insert_sql = '''
                       INSERT INTO public.order_payment 
-                        (order_uuid, type_id) 
+                        (order_uuid, type_id, status_id, json_data) 
                       VALUES 
-                        (?, ?)
-                      RETURNING payment_uuid
+                        (?, ?, ?, ?)
+                      RETURNING uuid
                      '''
         insert_params = (
             self._order_uuid,
             self._type_id,
+            self._status_id,
+            self._json_data,
         )
         logging.debug(f"create OrderPaymentDB SQL: {insert_sql}")
 
         try:
             logging.debug('Call database service')
-            self._payment_uuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._payment_uuid_field]
+            self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._suuid_field]
         except DatabaseError as e:
             self._storage_service.rollback()
             logging.error(e)
@@ -207,12 +226,14 @@ class OrderPaymentDB(OrderPaymentStored):
             raise OrderPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
         logging.debug('OrderPaymentDB created.')
 
-        return self._payment_uuid
+        return self._suuid
 
     def __map_orderdb_to_order(self, order_payment_db):
         return OrderPayment(
-            payment_uuid=order_payment_db[self._payment_uuid_field],
+            suuid=order_payment_db[self._suuid_field],
             order_uuid=order_payment_db[self._order_uuid_field],
             type_id=order_payment_db[self._type_id_field],
+            status_id=order_payment_db[self._status_id_field],
+            json_data=order_payment_db[self._json_data_field],
             created_date=order_payment_db[self._created_date_field],
         )
