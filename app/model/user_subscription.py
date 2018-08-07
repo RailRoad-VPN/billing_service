@@ -35,7 +35,7 @@ class UserSubscription(object):
         else:
             self._subscription_id = None
         self._status_id = status_id
-        if expire_date:
+        if expire_date is not None:
             self._expire_date = expire_date
         else:
             self._expire_date = self.calculate_expire_date()
@@ -47,18 +47,19 @@ class UserSubscription(object):
     def calculate_expire_date(self):
         logger.debug(f"calculate_expire_date by _subscription_id: {self._subscription_id}")
         now = datetime.datetime.now()
-        if self._subscription_id == 1:
+        sub_id = int(self._subscription_id)
+        if sub_id == 1:
             logger.debug(
                 f"subscription id 1 - it is free pack, payment per month, expire date +1 month to current date")
             delta = relativedelta(months=1)
-        elif self._subscription_id == 2:
+        elif sub_id == 2:
             logger.debug(
                 f"subscription id 2 - it is y starter pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
-        elif self._subscription_id == 3:
+        elif sub_id == 3:
             logger.debug(f"subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
-        elif self._subscription_id == 4:
+        elif sub_id == 4:
             logger.debug(
                 f"subscription id 4 - it is ultimate pack, payment per month, expire date +3 years to current date")
             delta = relativedelta(years=3)
