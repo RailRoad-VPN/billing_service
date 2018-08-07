@@ -32,13 +32,11 @@ class UserSubscription(object):
         self._user_uuid = user_uuid
         if self._subscription_id is not None:
             self._subscription_id = int(subscription_id)
-        else:
-            self._subscription_id = None
+            if expire_date is not None:
+                self._expire_date = expire_date
+            else:
+                self._expire_date = self.calculate_expire_date()
         self._status_id = status_id
-        if expire_date is not None:
-            self._expire_date = expire_date
-        else:
-            self._expire_date = self.calculate_expire_date()
         self._order_uuid = order_uuid
         self._modify_date = modify_date
         self._modify_reason = modify_reason
