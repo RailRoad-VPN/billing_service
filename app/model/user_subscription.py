@@ -9,6 +9,8 @@ from app.exception import *
 sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
 
+logger = logging.getLogger(__name__)
+
 
 class UserSubscription(object):
     __version__ = 1
@@ -40,17 +42,31 @@ class UserSubscription(object):
         self._created_date = created_date
 
     def calculate_expire_date(self):
+        logger.debug(f"calculate_expire_date")
         now = datetime.datetime.now()
         if self._subscription_id == 1:
-            return now + relativedelta(months=1)
+            logger.debug(
+                f"subscription id 1 - it is free pack, payment per month, expire date +1 month to current date")
+            delta = relativedelta(months=1)
         elif self._subscription_id == 2:
-            return now + relativedelta(years=1)
+            logger.debug(
+                f"subscription id 2 - it is y starter pack, payment per month, expire date +1 year to current date")
+            delta = relativedelta(years=1)
         elif self._subscription_id == 3:
-            return now + relativedelta(years=1)
+            logger.debug(f"subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
+            delta = relativedelta(years=1)
         elif self._subscription_id == 4:
-            return now + relativedelta(years=3)
+            logger.debug(
+                f"subscription id 4 - it is ultimate pack, payment per month, expire date +3 years to current date")
+            delta = relativedelta(years=3)
         else:
+            logger.error(f"subscription id is UNKNOWN! need manual work")
             return now
+
+        logger.debug(f"delta: {delta}")
+        exp_date = now + delta
+        logger.debug(f"calculated expire date: {exp_date}")
+        return exp_date
 
     def to_dict(self):
         return {
