@@ -42,7 +42,7 @@ class UserSubscription(object):
         self._created_date = created_date
 
     def calculate_expire_date(self):
-        logger.debug(f"calculate_expire_date")
+        logger.debug(f"calculate_expire_date by _subscription_id: {self._subscription_id}")
         now = datetime.datetime.now()
         if self._subscription_id == 1:
             logger.debug(
