@@ -30,7 +30,7 @@ class UserSubscription(object):
                  modify_reason: str = None, created_date: datetime = None):
         self._suuid = suuid
         self._user_uuid = user_uuid
-        if self._subscription_id is not None:
+        if subscription_id is not None:
             self._subscription_id = int(subscription_id)
             if expire_date is not None:
                 self._expire_date = expire_date
