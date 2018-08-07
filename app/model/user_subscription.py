@@ -30,7 +30,7 @@ class UserSubscription(object):
                  modify_reason: str = None, created_date: datetime = None):
         self._suuid = suuid
         self._user_uuid = user_uuid
-        self._subscription_id = subscription_id
+        self._subscription_id = int(subscription_id)
         self._status_id = status_id
         if expire_date:
             self._expire_date = expire_date
@@ -125,7 +125,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         super().__init__(storage_service, **kwargs)
 
     def find_by_uuid(self):
-        logging.info('UserSubscriptionDB find_by_user_uuid_id method')
+        logging.info('UserSubscriptionDB find_by_uuid method')
         select_sql = '''
                     SELECT 
                         us.uuid AS uuid,
@@ -176,7 +176,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         return self.from_db_to_obj(user_subscription_db=user_subscription_db)
 
     def find_by_user_uuid(self):
-        logging.info('UserSubscriptionDB find_by_user_uuid_id method')
+        logging.info('UserSubscriptionDB find_by_user_uuid method')
         select_sql = '''
                     SELECT 
                         us.uuid AS uuid,
