@@ -18,6 +18,8 @@ from response import APIResponseStatus, APIResponse
 from response import make_api_response, make_error_request_response
 from rest import APIResourceURL
 
+logger = logging.getLogger(__name__)
+
 
 class SubscriptionsAPI(ResourceAPI):
     __version__ = 1
@@ -43,11 +45,11 @@ class SubscriptionsAPI(ResourceAPI):
         self.__db_storage_service = db_storage_service
 
     def post(self) -> Response:
-        resp = make_api_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
+        resp = make_error_request_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
         return resp
 
     def put(self) -> Response:
-        resp = make_api_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
+        resp = make_error_request_response(http_code=HTTPStatus.METHOD_NOT_ALLOWED)
         return resp
 
     def get(self) -> Response:
@@ -65,7 +67,7 @@ class SubscriptionsAPI(ResourceAPI):
             subscription_list = subscription_db.find()
             subscription_list_dict = [subscription_list[i].to_api_dict() for i in range(0, len(subscription_list))]
         except SubscriptionException as e:
-            logging.error(e)
+            logger.error(e)
             error_code = e.error_code
             error = e.error
             developer_message = e.developer_message
@@ -82,7 +84,7 @@ class SubscriptionsAPI(ResourceAPI):
                 feature_list = feature_db.find_by_subscription_id()
                 subscription['features'] = [feature_list[i].to_api_dict() for i in range(0, len(feature_list))]
         except SubscriptionException as e:
-            logging.error(e)
+            logger.error(e)
             error_code = e.error_code
             error = e.error
             developer_message = e.developer_message

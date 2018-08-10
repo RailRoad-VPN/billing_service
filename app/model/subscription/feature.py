@@ -116,7 +116,7 @@ class FeatureDB(FeatureStored):
             logging.error(e)
             error_message = BillingError.FEATURE_FIND_ERROR_DB.message
             error_code = BillingError.FEATURE_FIND_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.FEATURE_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise FeatureException(error=error_message, error_code=error_code, developer_message=developer_message)

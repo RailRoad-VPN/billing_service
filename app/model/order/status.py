@@ -67,7 +67,7 @@ class OrderStatusDB(OrderStatusStored):
             logging.error(e)
             error_message = BillingError.ORDERSTATUS_FIND_ERROR_DB.message
             error_code = BillingError.ORDERSTATUS_FIND_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDERSTATUS_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise BillingException(error=error_message, error_code=error_code, developer_message=developer_message)

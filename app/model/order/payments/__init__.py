@@ -96,7 +96,7 @@ class OrderPaymentDB(OrderPaymentStored):
             logging.error(e)
             error_message = BillingError.ORDERPAYMENT_FIND_ERROR_DB.message
             error_code = BillingError.ORDERPAYMENT_FIND_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDERPAYMENT_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
@@ -131,7 +131,7 @@ class OrderPaymentDB(OrderPaymentStored):
             logging.error(e)
             error_message = BillingError.ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB.message
             error_code = BillingError.ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDERPAYMENT_FIND_BY_PAYMENT_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
@@ -177,7 +177,7 @@ class OrderPaymentDB(OrderPaymentStored):
             logging.error(e)
             error_message = BillingError.ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB.message
             error_code = BillingError.ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDERPAYMENT_FIND_BY_ORDER_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
@@ -219,7 +219,7 @@ class OrderPaymentDB(OrderPaymentStored):
                 pass
             error_message = BillingError.ORDERPAYMENT_CREATE_ERROR_DB.message
             error_code = BillingError.ORDERPAYMENT_CREATE_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDERPAYMENT_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 

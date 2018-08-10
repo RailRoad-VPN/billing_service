@@ -97,7 +97,7 @@ class OrderDB(OrderStored):
             logging.error(e)
             error_message = BillingError.ORDER_FIND_ERROR_DB.message
             error_code = BillingError.ORDER_FIND_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDER_FIND_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
@@ -133,7 +133,7 @@ class OrderDB(OrderStored):
             logging.error(e)
             error_message = BillingError.ORDER_FIND_BY_CODE_ERROR_DB.message
             error_code = BillingError.ORDER_FIND_BY_CODE_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDER_FIND_BY_CODE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
@@ -179,7 +179,7 @@ class OrderDB(OrderStored):
             logging.error(e)
             error_message = BillingError.ORDER_FIND_BY_UUID_ERROR_DB.message
             error_code = BillingError.ORDER_FIND_BY_UUID_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDER_FIND_BY_UUID_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
@@ -228,7 +228,7 @@ class OrderDB(OrderStored):
                 pass
             error_message = BillingError.ORDER_CREATE_ERROR_DB.message
             error_code = BillingError.ORDER_CREATE_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDER_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
@@ -267,7 +267,7 @@ class OrderDB(OrderStored):
             except IndexError:
                 pass
             error_message = BillingError.ORDER_UPDATE_ERROR_DB.message
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.ORDER_UPDATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
             error_code = BillingError.ORDER_UPDATE_ERROR_DB.code

@@ -151,7 +151,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             logging.error(e)
             error_message = BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB.message
             error_code = BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
@@ -202,7 +202,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             logging.error(e)
             error_message = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.message
             error_code = BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB.developer_message,
                                     e.pgcode,
@@ -248,7 +248,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                 pass
             error_message = BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.message
             error_code = BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.code
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.USER_SUBSCRIPTION_CREATE_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
@@ -297,7 +297,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
             except IndexError:
                 pass
             error_message = BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.message
-            developer_message = "%s. DatabaseError. Something wrong with database or SQL is broken. " \
+            developer_message = "%s. DatabaseError.. " \
                                 "Code: %s . %s" % (
                                     BillingError.USER_SUBSCRIPTION_UPDATE_ERROR_DB.developer_message, e.pgcode,
                                     e.pgerror)
