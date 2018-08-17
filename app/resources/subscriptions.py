@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class SubscriptionsAPI(ResourceAPI):
     __version__ = 1
 
-    __endpoint_name__ = 'SubscriptionsAPI'
+    __endpoint_name__ = __qualname__
     __api_url__ = 'subscriptions'
 
     _config = None

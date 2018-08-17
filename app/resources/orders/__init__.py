@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class OrdersAPI(ResourceAPI):
     __version__ = 1
 
-    __endpoint_name__ = 'OrdersAPI'
+    __endpoint_name__ = __qualname__
     __api_url__ = 'orders'
 
     _config = None

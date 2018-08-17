@@ -23,10 +23,10 @@ from rest import APIResourceURL
 logger = logging.getLogger(__name__)
 
 
-class OrderPaymentsAPI(ResourceAPI):
+class OrdersPaymentsAPI(ResourceAPI):
     __version__ = 1
 
-    __endpoint_name__ = 'OrderPaymentsAPI'
+    __endpoint_name__ = __qualname__
     __api_url__ = 'orders/<string:order_uuid>/payments'
 
     _config = None
@@ -35,7 +35,7 @@ class OrderPaymentsAPI(ResourceAPI):
 
     @staticmethod
     def get_api_urls(base_url: str) -> List[APIResourceURL]:
-        url = f"{base_url}/{OrderPaymentsAPI.__api_url__}"
+        url = f"{base_url}/{OrdersPaymentsAPI.__api_url__}"
         api_urls = [
             APIResourceURL(base_url=url, resource_name='', methods=['GET', 'POST']),
             APIResourceURL(base_url=url, resource_name='<string:suuid>', methods=['GET']),
@@ -111,7 +111,7 @@ class OrderPaymentsAPI(ResourceAPI):
         return resp
 
     def get(self, order_uuid: str, suuid: str = None) -> Response:
-        super(OrderPaymentsAPI, self).get(req=request)
+        super(OrdersPaymentsAPI, self).get(req=request)
 
         logger.debug(f"OrderPaymentsAPI -> GET method with parameters: order_uuid: {order_uuid}, suuid: {suuid}")
 
