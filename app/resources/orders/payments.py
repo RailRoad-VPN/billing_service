@@ -6,8 +6,7 @@ from typing import List
 from flask import Response, request
 
 from app.exception import BillingError, PaymentException, OrderPaymentException, \
-    OrderPaymentNotFoundException, PPGPaymentException, PPGPaymentNotFoundException
-from app.model import PaymentType
+    OrderPaymentNotFoundException
 from app.model.order.payments import OrderPaymentDB
 from utils import check_uuid
 
@@ -20,11 +19,11 @@ from response import make_api_response, make_error_request_response, APIResponse
     check_required_api_fields
 from rest import APIResourceURL
 
-logger = logging.getLogger(__name__)
-
 
 class OrdersPaymentsAPI(ResourceAPI):
     __version__ = 1
+
+    logger = logging.getLogger(__name__)
 
     __endpoint_name__ = __qualname__
     __api_url__ = 'orders/<string:order_uuid>/payments'
@@ -48,25 +47,25 @@ class OrdersPaymentsAPI(ResourceAPI):
         self.__db_storage_service = db_storage_service
 
     def post(self, order_uuid: str) -> Response:
-        logger.debug(f"create payment for order_uuid: {order_uuid}")
+        self.logger.debug(f"create payment for order_uuid: {order_uuid}")
 
-        logger.debug("check order_uuid")
+        self.logger.debug("check order_uuid")
         is_valid = check_uuid(order_uuid)
         if not is_valid:
             return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
 
         request_json = request.json
 
-        logger.debug("check is request has json")
+        self.logger.debug("check is request has json")
         if request_json is None:
             return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.REQUEST_NO_JSON)
 
-        logger.debug("get data from request_json")
+        self.logger.debug("get data from request_json")
         order_uuid = request_json.get(OrderPaymentDB._order_uuid_field, None)
         type_id = request_json.get(OrderPaymentDB._type_id_field, None)
         status_id = request_json.get(OrderPaymentDB._status_id_field, None)
         json_data = request_json.get(OrderPaymentDB._json_data_field, None)
-        logger.debug(f"order_uuid={order_uuid}, type_id={type_id}, status_id={status_id}, json_data={json_data}")
+        self.logger.debug(f"order_uuid={order_uuid}, type_id={type_id}, status_id={status_id}, json_data={json_data}")
 
         req_fields = {
             'order_uuid': order_uuid,
@@ -75,7 +74,7 @@ class OrdersPaymentsAPI(ResourceAPI):
             'json_data': json_data,
         }
 
-        logger.debug(f"check required fields: {req_fields}")
+        self.logger.debug(f"check required fields: {req_fields}")
         error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
@@ -83,15 +82,15 @@ class OrdersPaymentsAPI(ResourceAPI):
             resp = make_api_response(data=response_data, http_code=response_data.code)
             return resp
 
-        logger.debug("create order_payment_db instance")
+        self.logger.debug("create order_payment_db instance")
         order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid,
                                           status_id=status_id, type_id=type_id, json_data=json_data)
 
         try:
-            logger.debug("create order_payment in database")
+            self.logger.debug("create order_payment in database")
             payment_uuid = order_payment_db.create()
         except PaymentException as e:
-            logger.error(e)
+            self.logger.error(e)
             error_code = e.error_code
             error = e.error
             developer_message = e.developer_message
@@ -113,19 +112,19 @@ class OrdersPaymentsAPI(ResourceAPI):
     def get(self, order_uuid: str, suuid: str = None) -> Response:
         super(OrdersPaymentsAPI, self).get(req=request)
 
-        logger.debug(f"OrderPaymentsAPI -> GET method with parameters: order_uuid: {order_uuid}, suuid: {suuid}")
+        self.logger.debug(f"OrderPaymentsAPI -> GET method with parameters: order_uuid: {order_uuid}, suuid: {suuid}")
 
         if suuid is not None:
-            logger.debug(f"check order_payment uuid")
+            self.logger.debug(f"check order_payment uuid")
             is_valid = check_uuid(suuid)
             if not is_valid:
                 return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
 
-            logger.debug("create order_payment_db instance")
+            self.logger.debug("create order_payment_db instance")
             order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid,
                                               suuid=suuid)
             try:
-                logger.debug("find order_payment in database")
+                self.logger.debug("find order_payment in database")
                 order_payment = order_payment_db.find_by_payment()
             except OrderPaymentNotFoundException as e:
                 logging.error(e)
@@ -152,13 +151,13 @@ class OrdersPaymentsAPI(ResourceAPI):
 
             return resp
         else:
-            logger.debug(f"get all order payments")
+            self.logger.debug(f"get all order payments")
 
-            logger.debug("create order_payment_db instance")
+            self.logger.debug("create order_payment_db instance")
             order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid)
 
             try:
-                logger.debug(f"find all order_payments")
+                self.logger.debug(f"find all order_payments")
                 order_payment_list = order_payment_db.find_by_order()
             except OrderPaymentException as e:
                 logging.error(e)

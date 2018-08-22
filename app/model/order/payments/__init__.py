@@ -75,7 +75,7 @@ class OrderPaymentDB(OrderPaymentStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('OrderPaymentDB find method')
+        self.logger.info('OrderPaymentDB find method')
         select_sql = '''
                     SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
@@ -87,10 +87,10 @@ class OrderPaymentDB(OrderPaymentStored):
                       '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        logging.debug(f"select SQL: {select_sql}")
+        self.logger.debug(f"select SQL: {select_sql}")
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_list_db = self._storage_service.get(sql=select_sql)
         except DatabaseError as e:
             logging.error(e)
@@ -109,7 +109,7 @@ class OrderPaymentDB(OrderPaymentStored):
         return order_list
 
     def find_by_payment(self):
-        logging.info('OrderPaymentDB find_by_order method')
+        self.logger.info('OrderPaymentDB find_by_order method')
         select_sql = '''
                     SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
@@ -120,12 +120,12 @@ class OrderPaymentDB(OrderPaymentStored):
                     FROM public.order_payment op
                     WHERE op.uuid = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (
             self._suuid,
         )
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_payment_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -155,7 +155,7 @@ class OrderPaymentDB(OrderPaymentStored):
         return self.__map_orderdb_to_order(order_payment_db=order_payment_db)
 
     def find_by_order(self):
-        logging.info('OrderPaymentDB find_by_order method')
+        self.logger.info('OrderPaymentDB find_by_order method')
         select_sql = '''
                     SELECT op.uuid AS uuid,
                            op.order_uuid AS order_uuid,
@@ -166,12 +166,12 @@ class OrderPaymentDB(OrderPaymentStored):
                     FROM public.order_payment op
                     WHERE op.order_uuid = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (
             self._order_uuid,
         )
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_payment_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -191,7 +191,7 @@ class OrderPaymentDB(OrderPaymentStored):
         return order_payment_list
 
     def create(self):
-        logging.info('OrderPaymentDB create method')
+        self.logger.info('OrderPaymentDB create method')
         insert_sql = '''
                       INSERT INTO public.order_payment 
                         (order_uuid, type_id, status_id, json_data) 
@@ -205,10 +205,10 @@ class OrderPaymentDB(OrderPaymentStored):
             self._status_id,
             self._json_data,
         )
-        logging.debug(f"create OrderPaymentDB SQL: {insert_sql}")
+        self.logger.debug(f"create OrderPaymentDB SQL: {insert_sql}")
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][self._suuid_field]
         except DatabaseError as e:
             self._storage_service.rollback()
@@ -224,7 +224,7 @@ class OrderPaymentDB(OrderPaymentStored):
                                     BillingError.ORDERPAYMENT_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
             raise OrderPaymentException(error=error_message, error_code=error_code, developer_message=developer_message)
-        logging.debug('OrderPaymentDB created.')
+        self.logger.debug('OrderPaymentDB created.')
 
         return self._suuid
 

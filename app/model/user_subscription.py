@@ -9,11 +9,11 @@ from app.exception import *
 sys.path.insert(0, '../psql_library')
 from storage_service import StorageService, StoredObject
 
-logger = logging.getLogger(__name__)
-
 
 class UserSubscription(object):
     __version__ = 1
+
+    logger = logging.getLogger(__name__)
 
     _suuid = None
     _user_uuid = None
@@ -43,31 +43,31 @@ class UserSubscription(object):
         self._created_date = created_date
 
     def calculate_expire_date(self):
-        logger.debug(f"calculate_expire_date by _subscription_id: {self._subscription_id}")
+        self.logger.debug(f"calculate_expire_date by _subscription_id: {self._subscription_id}")
         now = datetime.datetime.now()
         sub_id = int(self._subscription_id)
         if sub_id == 1:
-            logger.debug(
+            self.logger.debug(
                 f"subscription id 1 - it is free pack, payment per month, expire date +1 month to current date")
             delta = relativedelta(months=1)
         elif sub_id == 2:
-            logger.debug(
+            self.logger.debug(
                 f"subscription id 2 - it is y starter pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
         elif sub_id == 3:
-            logger.debug(f"subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
+            self.logger.debug(f"subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
         elif sub_id == 4:
-            logger.debug(
+            self.logger.debug(
                 f"subscription id 4 - it is ultimate pack, payment per month, expire date +3 years to current date")
             delta = relativedelta(years=3)
         else:
-            logger.error(f"subscription id is UNKNOWN! need manual work")
+            self.logger.error(f"subscription id is UNKNOWN! need manual work")
             return now
 
-        logger.debug(f"delta: {delta}")
+        self.logger.debug(f"delta: {delta}")
         exp_date = now + delta
-        logger.debug(f"calculated expire date: {exp_date}")
+        self.logger.debug(f"calculated expire date: {exp_date}")
         return exp_date
 
     def to_dict(self):
@@ -100,6 +100,8 @@ class UserSubscription(object):
 class UserSubscriptionStored(StoredObject, UserSubscription):
     __version__ = 1
 
+    logger = logging.getLogger(__name__)
+
     def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None, status_id: int = None,
                  subscription_id: int = None, expire_date: datetime = None, order_uuid: str = None,
                  modify_date: datetime = None, modify_reason: str = None, created_date: datetime = None,
@@ -112,6 +114,8 @@ class UserSubscriptionStored(StoredObject, UserSubscription):
 
 class UserSubscriptionDB(UserSubscriptionStored):
     __version__ = 1
+
+    logger = logging.getLogger(__name__)
 
     _suuid_field = 'uuid'
     _user_uuid_field = 'user_uuid'
@@ -127,7 +131,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         super().__init__(storage_service, **kwargs)
 
     def find_by_uuid(self):
-        logging.info('UserSubscriptionDB find_by_uuid method')
+        self.logger.info('UserSubscriptionDB find_by_uuid method')
         select_sql = '''
                     SELECT 
                         us.uuid AS uuid,
@@ -142,10 +146,10 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.uuid = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (self._suuid,)
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             user_subscription_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -178,7 +182,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         return self.from_db_to_obj(user_subscription_db=user_subscription_db)
 
     def find_by_user_uuid(self):
-        logging.info('UserSubscriptionDB find_by_user_uuid method')
+        self.logger.info('UserSubscriptionDB find_by_user_uuid method')
         select_sql = '''
                     SELECT 
                         us.uuid AS uuid,
@@ -193,10 +197,10 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.user_uuid = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (self._user_uuid,)
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             user_subscription_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -218,7 +222,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
         return user_subscription_list
 
     def create(self):
-        logging.info('UserSubscriptionDB create method')
+        self.logger.info('UserSubscriptionDB create method')
         insert_sql = '''
                       INSERT INTO public.user_subscription
                         (user_uuid, expire_date, subscription_id, order_uuid, status_id)
@@ -233,10 +237,10 @@ class UserSubscriptionDB(UserSubscriptionStored):
             self._order_uuid,
             self._status_id,
         )
-        logging.debug('Create UserSubscriptionDB SQL : %s' % insert_sql)
+        self.logger.debug('Create UserSubscriptionDB SQL : %s' % insert_sql)
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][
                 self._suuid_field]
         except DatabaseError as e:
@@ -255,12 +259,12 @@ class UserSubscriptionDB(UserSubscriptionStored):
 
             raise UserSubscriptionException(error=error_message, error_code=error_code,
                                             developer_message=developer_message)
-        logging.debug('UserSubscriptionDB created.')
+        self.logger.debug('UserSubscriptionDB created.')
 
         return self._suuid
 
     def update(self):
-        logging.info('UserSubscriptionDB update method')
+        self.logger.info('UserSubscriptionDB update method')
 
         update_sql = '''
                     UPDATE public.user_subscription
@@ -274,7 +278,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     WHERE uuid = ?
                     '''
 
-        logging.debug('Update SQL: %s' % update_sql)
+        self.logger.debug('Update SQL: %s' % update_sql)
 
         update_params = (
             self._user_uuid,
@@ -287,9 +291,9 @@ class UserSubscriptionDB(UserSubscriptionStored):
         )
 
         try:
-            logging.debug("Call database service")
+            self.logger.debug("Call database service")
             self._storage_service.update(sql=update_sql, data=update_params)
-            logging.debug('User Subscription updated.')
+            self.logger.debug('User Subscription updated.')
         except DatabaseError as e:
             logging.error(e)
             try:

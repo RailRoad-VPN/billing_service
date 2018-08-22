@@ -88,7 +88,7 @@ class FeatureDB(FeatureStored):
         super().__init__(storage_service, **kwargs)
 
     def find_by_subscription_id(self):
-        logging.info('FeatureDB find method')
+        self.logger.info('FeatureDB find method')
         select_sql = '''
                     SELECT
                       sf.id              AS id,
@@ -107,10 +107,10 @@ class FeatureDB(FeatureStored):
         '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (self._subscription_id, self._lang_code)
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             feature_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)

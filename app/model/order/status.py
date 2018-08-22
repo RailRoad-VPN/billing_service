@@ -51,17 +51,17 @@ class OrderStatusDB(OrderStatusStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('OrderStatus find method')
+        self.logger.info('OrderStatus find method')
         select_sql = '''
                       SELECT 
                         id,
                         name
                       FROM public.order_status
                       '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_status_list_db = self._storage_service.get(sql=select_sql)
         except DatabaseError as e:
             logging.error(e)

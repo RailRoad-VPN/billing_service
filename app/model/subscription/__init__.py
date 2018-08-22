@@ -119,7 +119,7 @@ class SubscriptionDB(SubscriptionStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('SubscriptionDB find method')
+        self.logger.info('SubscriptionDB find method')
         select_sql = '''
                     SELECT
                       s.id                      AS id,
@@ -142,10 +142,10 @@ class SubscriptionDB(SubscriptionStored):
         '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         select_params = (self._lang_code,)
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             subscription_list_db = self._storage_service.get(sql=select_sql, data=select_params)
         except DatabaseError as e:
             logging.error(e)
@@ -164,7 +164,7 @@ class SubscriptionDB(SubscriptionStored):
         return subscription_list
 
     def find_by_id(self):
-        logging.info('SubscriptionDB find_by_id method')
+        self.logger.info('SubscriptionDB find_by_id method')
         select_sql = '''
                     SELECT
                       s.id                      AS id,
@@ -186,10 +186,10 @@ class SubscriptionDB(SubscriptionStored):
                     WHERE s.id = ?
         '''
 
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         select_params = (self._sid,)
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             subscription_list_db = self._storage_service.get(sql=select_sql, data=select_params)
         except DatabaseError as e:
             logging.error(e)

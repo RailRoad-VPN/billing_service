@@ -75,7 +75,7 @@ class OrderDB(OrderStored):
         super().__init__(storage_service, **kwargs)
 
     def find(self):
-        logging.info('OrderDB find method')
+        self.logger.info('OrderDB find method')
         select_sql = '''
                         SELECT
                             o.uuid AS uuid,
@@ -88,10 +88,10 @@ class OrderDB(OrderStored):
                       '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_list_db = self._storage_service.get(sql=select_sql)
         except DatabaseError as e:
             logging.error(e)
@@ -110,7 +110,7 @@ class OrderDB(OrderStored):
         return order_list
 
     def find_by_code(self):
-        logging.info('OrderDB find_by_code method')
+        self.logger.info('OrderDB find_by_code method')
         select_sql = '''
                     SELECT
                         o.uuid AS uuid,
@@ -122,12 +122,12 @@ class OrderDB(OrderStored):
                     FROM public.order o
                     WHERE o.code = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (
             self._code,
         )
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -156,7 +156,7 @@ class OrderDB(OrderStored):
         return self.__map_orderdb_to_order(order_db=order_db)
 
     def find_by_suuid(self):
-        logging.info('OrderDB find_by_uuid method')
+        self.logger.info('OrderDB find_by_uuid method')
         select_sql = '''
                     SELECT
                         o.uuid AS uuid,
@@ -168,12 +168,12 @@ class OrderDB(OrderStored):
                     FROM public.order o
                     WHERE o.uuid = ?
         '''
-        logging.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"Select SQL: {select_sql}")
         params = (
             self._suuid,
         )
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             order_list_db = self._storage_service.get(sql=select_sql, data=params)
         except DatabaseError as e:
             logging.error(e)
@@ -202,7 +202,7 @@ class OrderDB(OrderStored):
         return self.__map_orderdb_to_order(order_db=order_db)
 
     def create(self):
-        logging.info('OrderDB create method')
+        self.logger.info('OrderDB create method')
         insert_sql = '''
                       INSERT INTO public.order 
                         (status_id) 
@@ -213,10 +213,10 @@ class OrderDB(OrderStored):
         insert_params = (
             self._status_id,
         )
-        logging.debug('Create OrderDB SQL : %s' % insert_sql)
+        self.logger.debug('Create OrderDB SQL : %s' % insert_sql)
 
         try:
-            logging.debug('Call database service')
+            self.logger.debug('Call database service')
             self._suuid = self._storage_service.create(sql=insert_sql, data=insert_params, is_return=True)[0][
                 self._suuid_field]
         except DatabaseError as e:
@@ -233,12 +233,12 @@ class OrderDB(OrderStored):
                                     BillingError.ORDER_CREATE_ERROR_DB.developer_message, e.pgcode, e.pgerror)
 
             raise OrderException(error=error_message, error_code=error_code, developer_message=developer_message)
-        logging.debug('OrderDB created.')
+        self.logger.debug('OrderDB created.')
 
         return self._suuid
 
     def update(self):
-        logging.info('OrderDB update method')
+        self.logger.info('OrderDB update method')
 
         update_sql = '''
                     UPDATE public.order 
@@ -248,7 +248,7 @@ class OrderDB(OrderStored):
                     WHERE uuid = ?
                     '''
 
-        logging.debug('Update SQL: %s' % update_sql)
+        self.logger.debug('Update SQL: %s' % update_sql)
 
         update_params = (
             self._status_id,
@@ -257,9 +257,9 @@ class OrderDB(OrderStored):
         )
 
         try:
-            logging.debug("Call database service")
+            self.logger.debug("Call database service")
             self._storage_service.update(sql=update_sql, data=update_params)
-            logging.debug('OrderDB updated.')
+            self.logger.debug('OrderDB updated.')
         except DatabaseError as e:
             logging.error(e)
             try:

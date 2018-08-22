@@ -18,11 +18,11 @@ from response import APIResponseStatus, APIResponse
 from response import make_api_response, make_error_request_response
 from rest import APIResourceURL
 
-logger = logging.getLogger(__name__)
-
 
 class SubscriptionsAPI(ResourceAPI):
     __version__ = 1
+
+    logger = logging.getLogger(__name__)
 
     __endpoint_name__ = __qualname__
     __api_url__ = 'subscriptions'
@@ -67,7 +67,7 @@ class SubscriptionsAPI(ResourceAPI):
             subscription_list = subscription_db.find()
             subscription_list_dict = [subscription_list[i].to_api_dict() for i in range(0, len(subscription_list))]
         except SubscriptionException as e:
-            logger.error(e)
+            self.logger.error(e)
             error_code = e.error_code
             error = e.error
             developer_message = e.developer_message
@@ -84,7 +84,7 @@ class SubscriptionsAPI(ResourceAPI):
                 feature_list = feature_db.find_by_subscription_id()
                 subscription['features'] = [feature_list[i].to_api_dict() for i in range(0, len(feature_list))]
         except SubscriptionException as e:
-            logger.error(e)
+            self.logger.error(e)
             error_code = e.error_code
             error = e.error
             developer_message = e.developer_message
