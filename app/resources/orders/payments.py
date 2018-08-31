@@ -49,18 +49,18 @@ class OrdersPaymentsAPI(ResourceAPI):
     def post(self, order_uuid: str) -> Response:
         self.logger.debug(f"{self.__class__}: create payment for order_uuid: {order_uuid}")
 
-        self.logger.debug("check order_uuid")
+        self.logger.debug(f"{self.__class__}: check order_uuid")
         is_valid = check_uuid(order_uuid)
         if not is_valid:
             return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
 
         request_json = request.json
 
-        self.logger.debug("check is request has json")
+        self.logger.debug(f"{self.__class__}: check is request has json")
         if request_json is None:
             return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.REQUEST_NO_JSON)
 
-        self.logger.debug("get data from request_json")
+        self.logger.debug(f"{self.__class__}: get data from request_json")
         order_uuid = request_json.get(OrderPaymentDB._order_uuid_field, None)
         type_id = request_json.get(OrderPaymentDB._type_id_field, None)
         status_id = request_json.get(OrderPaymentDB._status_id_field, None)
@@ -82,12 +82,12 @@ class OrdersPaymentsAPI(ResourceAPI):
             resp = make_api_response(data=response_data, http_code=response_data.code)
             return resp
 
-        self.logger.debug("create order_payment_db instance")
+        self.logger.debug(f"{self.__class__}: create order_payment_db instance")
         order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid,
                                           status_id=status_id, type_id=type_id, json_data=json_data)
 
         try:
-            self.logger.debug("create order_payment in database")
+            self.logger.debug(f"{self.__class__}: create order_payment in database")
             payment_uuid = order_payment_db.create()
         except PaymentException as e:
             self.logger.error(e)
@@ -120,11 +120,11 @@ class OrdersPaymentsAPI(ResourceAPI):
             if not is_valid:
                 return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
 
-            self.logger.debug("create order_payment_db instance")
+            self.logger.debug(f"{self.__class__}: create order_payment_db instance")
             order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid,
                                               suuid=suuid)
             try:
-                self.logger.debug("find order_payment in database")
+                self.logger.debug(f"{self.__class__}: find order_payment in database")
                 order_payment = order_payment_db.find_by_payment()
             except OrderPaymentNotFoundException as e:
                 logging.error(e)
@@ -153,7 +153,7 @@ class OrdersPaymentsAPI(ResourceAPI):
         else:
             self.logger.debug(f"{self.__class__}: get all order payments")
 
-            self.logger.debug("create order_payment_db instance")
+            self.logger.debug(f"{self.__class__}: create order_payment_db instance")
             order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid)
 
             try:
