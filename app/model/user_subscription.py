@@ -43,7 +43,7 @@ class UserSubscription(object):
         self._created_date = created_date
 
     def calculate_expire_date(self):
-        self.logger.debug(f"calculate_expire_date by _subscription_id: {self._subscription_id}")
+        self.logger.debug(f"{self.__class__}: calculate_expire_date by _subscription_id: {self._subscription_id}")
         now = datetime.datetime.now()
         sub_id = int(self._subscription_id)
         if sub_id == 1:
@@ -55,7 +55,7 @@ class UserSubscription(object):
                 f"subscription id 2 - it is y starter pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
         elif sub_id == 3:
-            self.logger.debug(f"subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
+            self.logger.debug(f"{self.__class__}: subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
         elif sub_id == 4:
             self.logger.debug(
@@ -65,9 +65,9 @@ class UserSubscription(object):
             self.logger.error(f"subscription id is UNKNOWN! need manual work")
             return now
 
-        self.logger.debug(f"delta: {delta}")
+        self.logger.debug(f"{self.__class__}: delta: {delta}")
         exp_date = now + delta
-        self.logger.debug(f"calculated expire date: {exp_date}")
+        self.logger.debug(f"{self.__class__}: calculated expire date: {exp_date}")
         return exp_date
 
     def to_dict(self):
@@ -146,7 +146,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.uuid = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (self._suuid,)
         try:
             self.logger.debug('Call database service')
@@ -197,7 +197,7 @@ class UserSubscriptionDB(UserSubscriptionStored):
                     FROM public.user_subscription us 
                     WHERE us.user_uuid = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (self._user_uuid,)
         try:
             self.logger.debug('Call database service')

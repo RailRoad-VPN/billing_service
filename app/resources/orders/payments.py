@@ -47,7 +47,7 @@ class OrdersPaymentsAPI(ResourceAPI):
         self.__db_storage_service = db_storage_service
 
     def post(self, order_uuid: str) -> Response:
-        self.logger.debug(f"create payment for order_uuid: {order_uuid}")
+        self.logger.debug(f"{self.__class__}: create payment for order_uuid: {order_uuid}")
 
         self.logger.debug("check order_uuid")
         is_valid = check_uuid(order_uuid)
@@ -65,7 +65,7 @@ class OrdersPaymentsAPI(ResourceAPI):
         type_id = request_json.get(OrderPaymentDB._type_id_field, None)
         status_id = request_json.get(OrderPaymentDB._status_id_field, None)
         json_data = request_json.get(OrderPaymentDB._json_data_field, None)
-        self.logger.debug(f"order_uuid={order_uuid}, type_id={type_id}, status_id={status_id}, json_data={json_data}")
+        self.logger.debug(f"{self.__class__}: order_uuid={order_uuid}, type_id={type_id}, status_id={status_id}, json_data={json_data}")
 
         req_fields = {
             'order_uuid': order_uuid,
@@ -74,7 +74,7 @@ class OrdersPaymentsAPI(ResourceAPI):
             'json_data': json_data,
         }
 
-        self.logger.debug(f"check required fields: {req_fields}")
+        self.logger.debug(f"{self.__class__}: check required fields: {req_fields}")
         error_fields = check_required_api_fields(req_fields)
         if len(error_fields) > 0:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST,
@@ -112,10 +112,10 @@ class OrdersPaymentsAPI(ResourceAPI):
     def get(self, order_uuid: str, suuid: str = None) -> Response:
         super(OrdersPaymentsAPI, self).get(req=request)
 
-        self.logger.debug(f"OrderPaymentsAPI -> GET method with parameters: order_uuid: {order_uuid}, suuid: {suuid}")
+        self.logger.debug(f"{self.__class__}: OrderPaymentsAPI -> GET method with parameters: order_uuid: {order_uuid}, suuid: {suuid}")
 
         if suuid is not None:
-            self.logger.debug(f"check order_payment uuid")
+            self.logger.debug(f"{self.__class__}: check order_payment uuid")
             is_valid = check_uuid(suuid)
             if not is_valid:
                 return make_error_request_response(HTTPStatus.BAD_REQUEST, err=BillingError.ORDER_IDENTIFIER_ERROR)
@@ -151,13 +151,13 @@ class OrdersPaymentsAPI(ResourceAPI):
 
             return resp
         else:
-            self.logger.debug(f"get all order payments")
+            self.logger.debug(f"{self.__class__}: get all order payments")
 
             self.logger.debug("create order_payment_db instance")
             order_payment_db = OrderPaymentDB(storage_service=self.__db_storage_service, order_uuid=order_uuid)
 
             try:
-                self.logger.debug(f"find all order_payments")
+                self.logger.debug(f"{self.__class__}: find all order_payments")
                 order_payment_list = order_payment_db.find_by_order()
             except OrderPaymentException as e:
                 logging.error(e)

@@ -59,7 +59,7 @@ class PaymentTypeDB(PaymentTypeStored):
                         name, 
                       FROM public.payment_type
                       '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
 
         try:
             self.logger.debug('Call database service')

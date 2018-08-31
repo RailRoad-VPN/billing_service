@@ -87,7 +87,7 @@ class OrderPaymentDB(OrderPaymentStored):
                       '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        self.logger.debug(f"select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: select SQL: {select_sql}")
 
         try:
             self.logger.debug('Call database service')
@@ -120,7 +120,7 @@ class OrderPaymentDB(OrderPaymentStored):
                     FROM public.order_payment op
                     WHERE op.uuid = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (
             self._suuid,
         )
@@ -166,7 +166,7 @@ class OrderPaymentDB(OrderPaymentStored):
                     FROM public.order_payment op
                     WHERE op.order_uuid = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (
             self._order_uuid,
         )
@@ -205,7 +205,7 @@ class OrderPaymentDB(OrderPaymentStored):
             self._status_id,
             self._json_data,
         )
-        self.logger.debug(f"create OrderPaymentDB SQL: {insert_sql}")
+        self.logger.debug(f"{self.__class__}: create OrderPaymentDB SQL: {insert_sql}")
 
         try:
             self.logger.debug('Call database service')

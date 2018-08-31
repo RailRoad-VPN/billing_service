@@ -58,7 +58,7 @@ class OrderStatusDB(OrderStatusStored):
                         name
                       FROM public.order_status
                       '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
 
         try:
             self.logger.debug('Call database service')

@@ -88,7 +88,7 @@ class OrderDB(OrderStored):
                       '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
 
         try:
             self.logger.debug('Call database service')
@@ -122,7 +122,7 @@ class OrderDB(OrderStored):
                     FROM public.order o
                     WHERE o.code = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (
             self._code,
         )
@@ -168,7 +168,7 @@ class OrderDB(OrderStored):
                     FROM public.order o
                     WHERE o.uuid = ?
         '''
-        self.logger.debug(f"Select SQL: {select_sql}")
+        self.logger.debug(f"{self.__class__}: Select SQL: {select_sql}")
         params = (
             self._suuid,
         )
