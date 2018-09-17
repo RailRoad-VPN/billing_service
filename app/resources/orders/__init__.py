@@ -37,9 +37,8 @@ class OrdersAPI(ResourceAPI):
         ]
         return api_urls
 
-    def __init__(self, db_storage_service: DBStorageService, config: dict) -> None:
-        super().__init__()
-        self._config = config
+    def __init__(self, db_storage_service: DBStorageService, *args) -> None:
+        super().__init__(*args)
         self.__db_storage_service = db_storage_service
 
     def post(self) -> Response:
