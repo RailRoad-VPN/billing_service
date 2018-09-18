@@ -52,8 +52,8 @@ class UserSubscription(object):
             delta = relativedelta(months=1)
         elif sub_id == 2:
             self.logger.debug(
-                f"subscription id 2 - it is y starter pack, payment per month, expire date +1 year to current date")
-            delta = relativedelta(years=1)
+                f"subscription id 2 - it is starter pack, payment per month, expire date +1 month to current date")
+            delta = relativedelta(months=1)
         elif sub_id == 3:
             self.logger.debug(f"{self.__class__}: subscription id 3 - it is pro pack, payment per month, expire date +1 year to current date")
             delta = relativedelta(years=1)
