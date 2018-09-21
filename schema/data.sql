@@ -1,12 +1,14 @@
-TRUNCATE public.subscription  CASCADE;
+TRUNCATE public.user_subscription CASCADE;
+TRUNCATE public.user_subscription_status CASCADE;
+TRUNCATE public.order_status CASCADE;
+TRUNCATE public.order CASCADE;
+TRUNCATE public.payment_type CASCADE;
+TRUNCATE public.payment_status CASCADE;
+TRUNCATE public.order_payment CASCADE;
+TRUNCATE public.subscription CASCADE;
 TRUNCATE public.subscription_translation CASCADE;
 TRUNCATE public.subscription_feature CASCADE;
 TRUNCATE public.subscription_feature_translation CASCADE;
-TRUNCATE public.payment_type CASCADE;
-TRUNCATE public.order_status CASCADE;
-TRUNCATE public."order" CASCADE;
-TRUNCATE public.order_payment CASCADE;
-TRUNCATE public.user_subscription CASCADE;
 
 
 -- subscriptions (1 - FREE, 2 - STARTER, 3 - PRO, 4 - ULTIMATE
@@ -204,6 +206,6 @@ INSERT INTO public.user_subscription_status (id, name) VALUES (3, 'expired');
 INSERT INTO public.user_subscription_status (id, name) VALUES (4, 'waiting for payment');
 
 INSERT INTO public."order" (uuid, code, status_id) VALUES ('fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 3);
-INSERT INTO public.order_payment (uuid, order_uuid, type_id) VALUES ('34bd42e9-aadd-4eab-8038-c272f38ea48a', 'fbd762d8-fbb5-4625-969e-398cf3e24274', 1);
+INSERT INTO public.order_payment (uuid, order_uuid, type_id, status_id, json_data) VALUES ('34bd42e9-aadd-4eab-8038-c272f38ea48a', 'fbd762d8-fbb5-4625-969e-398cf3e24274', 1, 1, '{"test": "123"}');
 
 INSERT INTO public.user_subscription (uuid, user_uuid, subscription_id, order_uuid, status_id, expire_date) VALUES ('e99cb69c-1ddf-47e2-9558-abf6ad83a7b9', 'cf402144-0c02-4b97-98f2-73f7b56160cf', 2, 'fbd762d8-fbb5-4625-969e-398cf3e24274', 1, '2020-06-13 22:26:48.036000');
