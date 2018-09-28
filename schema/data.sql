@@ -19,7 +19,7 @@ INSERT INTO public.subscription_translation (subscription_id, name, description,
 INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (1, 'Бесплатный ПАК', 'Попробуй бесплатно!', 'не оплачивается', 'не оплачивается', 'ru');
 
 -- STARTER
-INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (2, 8.69, 7.96, 12, 1);
+INSERT INTO public.subscription (id, price_per_month, old_price_per_month, billed_period_in_months, billed_period_in_years) VALUES (2, 7.96, 0, 1, 1);
 INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'STARTER PACK', 'Good pack to start!', 'billed monthly', 'per month', 'en');
 INSERT INTO public.subscription_translation (subscription_id, name, description, bill_freq, price_freq, lang_code) VALUES (2, 'Начальный ПАК', 'Хорошее начало пути!', 'оплачивается ежемесячно', 'в месяц', 'ru');
 
@@ -48,7 +48,7 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (1
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (11, 4, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (12, 4, TRUE);
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (1,  'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (1,  'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (1,  'Все страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (2,  '10 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (2,  '10 Устройств', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (3,  'Speed: Highest', 'Your connection will be on Highest speed', 'en');
@@ -86,7 +86,7 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (2
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (23, 3, TRUE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (24, 3, TRUE);
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (13, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (13, 'Все Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (13, 'Все страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (14, '5 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (14, '5 Устройств', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (15, 'Speed: High', 'Your connection will be on High speed', 'en');
@@ -123,8 +123,8 @@ INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (3
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (34, 2, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (35, 2, FALSE);
 INSERT INTO public.subscription_feature (id, subscription_id, enabled) VALUES (36, 2, FALSE);
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, '3 Countries', 'Number of countries where you can choose VPN server', 'en');
-INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, '3 Страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, 'ALL Countries', 'Number of countries where you can choose VPN server', 'en');
+INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (25, 'Все страны', 'Количество стран, в которых вы можете выбрать VPN сервер', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (26, '3 Devices', 'Number of devices (laptop, smartphone, tablet) where you can connect VPN at once time', 'en');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (26, '3 Устройства', 'Количество устройств (ноутбук, смартфон, планшет) на которых можно подключить VPN в один момент времени', 'ru');
 INSERT INTO public.subscription_feature_translation (subscription_feature_id, name, tooltip, lang_code) VALUES (27, 'Speed: Low', 'Your connection will be on Low speed', 'en');
