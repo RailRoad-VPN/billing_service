@@ -13,6 +13,3 @@ class PaymentType(Enum):
     def __init__(self, sid, text):
         self.sid = sid
         self.text = text
-
-    PAYPROGLOBAL = (1, 'payproglobal')
-    PAYPROGLOBAL_TEST = (2, 'payproglobal_test')

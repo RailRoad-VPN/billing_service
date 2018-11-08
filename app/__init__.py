@@ -7,8 +7,8 @@ from flask import Flask, request
 
 from app.resources.orders import OrdersAPI
 from app.resources.orders.payments import OrdersPaymentsAPI
-from app.resources.subscriptions import SubscriptionsAPI
-from app.resources.users.subscriptions import UsersSubscriptionsAPI
+from app.resources.rrnservices import RRNServicesAPI
+from app.resources.users.rrnservices import UserRRNServicesAPI
 
 sys.path.insert(0, '../psql_library')
 from psql_helper import PostgreSQL
@@ -45,8 +45,8 @@ api_base_uri = app_config['API_BASE_URI']
 apis = [
     {'cls': OrdersAPI, 'args': [db_storage_service, app_config]},
     {'cls': OrdersPaymentsAPI, 'args': [db_storage_service, app_config]},
-    {'cls': SubscriptionsAPI, 'args': [db_storage_service, app_config]},
-    {'cls': UsersSubscriptionsAPI, 'args': [db_storage_service, app_config]},
+    {'cls': RRNServicesAPI, 'args': [db_storage_service, app_config]},
+    {'cls': UserRRNServicesAPI, 'args': [db_storage_service, app_config]},
 ]
 
 register_api(app, api_base_uri, apis)

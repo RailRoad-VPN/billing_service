@@ -30,30 +30,23 @@ class BillingError(APIErrorEnum):
     REQUEST_NO_JSON = (name + str(count()), 'REQUEST_NO_JSON phrase', 'REQUEST_NO_JSON description')
     BAD_IDENTITY_ERROR = (name + str(count()), 'BAD_IDENTITY_ERROR phrase', 'BAD_IDENTITY_ERROR description')
 
-    SUBSCRIPTION_FIND_ERROR_DB = (name + str(count()), 'SUBSCRIPTION_FIND_ERROR_DB phrase', 'SUBSCRIPTION_FIND_ERROR_DB description')
+    Service_FIND_ERROR_DB = (name + str(count()), 'Service_FIND_ERROR_DB phrase', 'Service_FIND_ERROR_DB description')
 
     FEATURE_FIND_ERROR_DB = (name + str(count()), 'FEATURE_FIND_ERROR_DB phrase', 'FEATURE_FIND_ERROR_DB description')
 
-    USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB phrase', 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR_DB description')
-    USER_SUBSCRIPTION_FIND_BY_UUID_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR phrase', 'USER_SUBSCRIPTION_FIND_BY_UUID_ERROR description')
-    USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB phrase', 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR_DB description')
-    USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR phrase', 'USER_SUBSCRIPTION_FIND_BY_USER_UUID_ERROR description')
-    USER_SUBSCRIPTION_NOT_FOUND_ERROR = (name + str(count()), 'USER_SUBSCRIPTION_NOT_FOUND_ERROR phrase', 'USER_SUBSCRIPTION_NOT_FOUND_ERROR description')
-    USER_SUBSCRIPTION_UPDATE_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_UPDATE_ERROR_DB phrase', 'USER_SUBSCRIPTION_UPDATE_ERROR_DB description')
-    USER_SUBSCRIPTION_CREATE_ERROR_DB = (name + str(count()), 'USER_SUBSCRIPTION_CREATE_ERROR_DB phrase', 'USER_SUBSCRIPTION_CREATE_ERROR_DB description')
+    USER_RRNSERVICE_FIND_BY_UUID_ERROR_DB = (name + str(count()), 'USER_RRNSERVICE_FIND_BY_UUID_ERROR_DB phrase', 'USER_RRNSERVICE_FIND_BY_UUID_ERROR_DB description')
+    USER_RRNSERVICE_FIND_BY_UUID_ERROR = (name + str(count()), 'USER_RRNSERVICE_FIND_BY_UUID_ERROR phrase', 'USER_RRNSERVICE_FIND_BY_UUID_ERROR description')
+    USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR_DB = (name + str(count()), 'USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR_DB phrase', 'USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR_DB description')
+    USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR = (name + str(count()), 'USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR phrase', 'USER_RRNSERVICE_FIND_BY_USER_UUID_ERROR description')
+    USER_RRNSERVICE_NOT_FOUND_ERROR = (name + str(count()), 'USER_RRNSERVICE_NOT_FOUND_ERROR phrase', 'USER_RRNSERVICE_NOT_FOUND_ERROR description')
+    USER_RRNSERVICE_UPDATE_ERROR_DB = (name + str(count()), 'USER_RRNSERVICE_UPDATE_ERROR_DB phrase', 'USER_RRNSERVICE_UPDATE_ERROR_DB description')
+    USER_RRNSERVICE_CREATE_ERROR_DB = (name + str(count()), 'USER_RRNSERVICE_CREATE_ERROR_DB phrase', 'USER_RRNSERVICE_CREATE_ERROR_DB description')
 
     PAYMENT_FIND_ERROR_DB = (name + str(count()), 'PAYMENT_FIND_ERROR_DB phrase', 'PAYMENT_FIND_ERROR_DB description')
     PAYMENT_FIND_BY_ID_ERROR_DB = (name + str(count()), 'PAYMENT_FIND_BY_ID_ERROR_DB phrase', 'PAYMENT_FIND_BY_ID_ERROR_DB description')
     PAYMENT_CREATE_ERROR_DB = (name + str(count()), 'PAYMENT_CREATE_ERROR_DB phrase', 'PAYMENT_CREATE_ERROR_DB description')
     PAYMENT_UPDATE_ERROR_DB = (name + str(count()), 'PAYMENT_UPDATE_ERROR_DB phrase', 'PAYMENT_UPDATE_ERROR_DB description')
     PAYMENT_FIND_BY_ID_ERROR = (name + str(count()), 'PAYMENT_FIND_BY_ID_ERROR phrase', 'PAYMENT_FIND_BY_ID_ERROR description')
-
-    PPG_PAYMENT_CREATE_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_CREATE_ERROR_DB phrase', 'PPG_PAYMENT_CREATE_ERROR_DB description')
-    PPG_PAYMENT_UPDATE_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_UPDATE_ERROR_DB phrase', 'PPG_PAYMENT_UPDATE_ERROR_DB description')
-    PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR_DB description')
-    PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_PAYMENTUUID_ERROR description')
-    PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR_DB description')
-    PPG_PAYMENT_FIND_BY_ORDERID_ERROR = (name + str(count()), 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR phrase', 'PPG_PAYMENT_FIND_BY_ORDERID_ERROR description')
 
     ORDER_CREATE_ERROR_DB = (name + str(count()), 'ORDER_CREATE_ERROR_DB phrase', 'ORDER_CREATE_ERROR_DB description')
     ORDER_UPDATE_ERROR_DB = (name + str(count()), 'ORDER_UPDATE_ERROR_DB phrase', 'ORDER_UPDATE_ERROR_DB description')
@@ -105,14 +98,14 @@ class BillingNotFoundException(Exception):
         self.developer_message = developer_message
 
 
-class SubscriptionException(BillingException):
+class RRNServiceException(BillingException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class SubscriptionNotFoundException(SubscriptionException):
+class RRNServiceNotFoundException(RRNServiceException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):
@@ -189,14 +182,14 @@ class FeatureNotFoundException(FeatureException):
         super().__init__(*args, **kwargs)
 
 
-class UserSubscriptionException(BillingException):
+class UserRRNServiceException(BillingException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
 
-class UserSubscriptionNotFoundException(BillingException):
+class UserRRNServiceNotFoundException(BillingException):
     __version__ = 1
 
     def __init__(self, *args, **kwargs):

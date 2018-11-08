@@ -12,60 +12,20 @@ SET default_with_oids = FALSE;
 
 -- CREATE EXTENSION pgcrypto;
 
-DROP TABLE IF EXISTS public.user_subscription CASCADE;
-DROP TABLE IF EXISTS public.user_subscription_status CASCADE;
 DROP TABLE IF EXISTS public.order_status CASCADE;
 DROP TABLE IF EXISTS public.order CASCADE;
 DROP TABLE IF EXISTS public.payment_type CASCADE;
 DROP TABLE IF EXISTS public.payment_status CASCADE;
 DROP TABLE IF EXISTS public.order_payment CASCADE;
-DROP TABLE IF EXISTS public.subscription CASCADE;
-DROP TABLE IF EXISTS public.subscription_translation CASCADE;
-DROP TABLE IF EXISTS public.subscription_feature CASCADE;
-DROP TABLE IF EXISTS public.subscription_feature_translation CASCADE;
+DROP TABLE IF EXISTS public.service CASCADE;
+DROP TABLE IF EXISTS public.service_type CASCADE;
+DROP TABLE IF EXISTS public.user_service CASCADE;
+DROP TABLE IF EXISTS public.user_service_status CASCADE;
 
-
-CREATE TABLE public.subscription
+CREATE TABLE public.service_type
 (
     id SERIAL PRIMARY KEY
-  , price_per_month NUMERIC NOT NULL
-  , old_price_per_month NUMERIC
-  , billed_period_in_months INT NOT NULL
-  , billed_period_in_years INT NOT NULL
-  , is_best BOOLEAN DEFAULT FALSE
-  , modify_date TIMESTAMP NOT NULL DEFAULT now()
-  , modify_reason TEXT NOT NULL DEFAULT 'init'
-  , created_date TIMESTAMP NOT NULL DEFAULT now()
-);
-
-CREATE TABLE public.subscription_translation
-(
-    id SERIAL PRIMARY KEY
-  , subscription_id INT REFERENCES public.subscription(id) NOT NULL
-  , name VARCHAR(200) NOT NULL
-  , description VARCHAR(200) NOT NULL
-  , bill_freq VARCHAR(200)
-  , price_freq VARCHAR(200)
-  , lang_code CHAR(2)
-);
-
-CREATE TABLE public.subscription_feature
-(
-    id SERIAL PRIMARY KEY
-  , subscription_id INT REFERENCES public.subscription(id) NOT NULL
-  , enabled BOOLEAN NOT NULL DEFAULT FALSE
-  , modify_date TIMESTAMP NOT NULL DEFAULT now()
-  , modify_reason TEXT NOT NULL DEFAULT 'init'
-  , created_date TIMESTAMP NOT NULL DEFAULT now()
-);
-
-CREATE TABLE public.subscription_feature_translation
-(
-    id SERIAL PRIMARY KEY
-  , subscription_feature_id INT REFERENCES public.subscription_feature(id) NOT NULL
-  , name VARCHAR(200) NOT NULL
-  , tooltip VARCHAR(300)
-  , lang_code CHAR(2)
+  , name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE public.payment_type
@@ -86,10 +46,24 @@ CREATE TABLE public.payment_status
   , name VARCHAR(100)
 );
 
-CREATE TABLE public.user_subscription_status
+CREATE TABLE public.user_service_status
 (
     id SERIAL PRIMARY KEY
   , name VARCHAR(100)
+);
+
+CREATE TABLE public.service
+(
+    id SERIAL PRIMARY KEY
+  , name VARCHAR(100) NOT NULL
+  , description VARCHAR(500)
+  , type_id INT REFERENCES public.service_type(id) NOT NULL
+  , price NUMERIC NOT NULL
+  , old_price NUMERIC
+  , billed_period INT
+  , modify_date TIMESTAMP NOT NULL DEFAULT now()
+  , modify_reason TEXT NOT NULL DEFAULT 'init'
+  , created_date TIMESTAMP NOT NULL DEFAULT now()
 );
 
 CREATE TABLE public.order
@@ -112,14 +86,14 @@ CREATE TABLE public.order_payment
   , created_date TIMESTAMP NOT NULL DEFAULT now()
 );
 
-CREATE TABLE public.user_subscription
+CREATE TABLE public.user_service
 (
     uuid UUID PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL
   , user_uuid UUID NOT NULL
-  , subscription_id INT REFERENCES public.subscription(id) NOT NULL
+  , service_id INT REFERENCES public.service(id) NOT NULL
   , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
-  , status_id INT REFERENCES public.user_subscription_status(id) NOT NULL
-  , expire_date TIMESTAMP NOT NULL
+  , status_id INT REFERENCES public.user_service_status(id) NOT NULL
+  , expire_date TIMESTAMP
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'
   , created_date TIMESTAMP NOT NULL DEFAULT now()
