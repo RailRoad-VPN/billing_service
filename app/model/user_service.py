@@ -19,6 +19,7 @@ class UserRRNService(object):
     _user_uuid = None
     _service_id = None
     _status_id = None
+    _is_trial = None
     _expire_date = None
     _order_uuid = None
     _modify_date = None
@@ -27,12 +28,13 @@ class UserRRNService(object):
 
     def __init__(self, suuid: str = None, user_uuid: str = None, service_id: int = None, status_id: int = None,
                  expire_date: datetime = None, order_uuid: str = None, modify_date: datetime = None,
-                 modify_reason: str = None, created_date: datetime = None):
+                 is_trial: bool = None, modify_reason: str = None, created_date: datetime = None):
         self._suuid = suuid
         self._user_uuid = user_uuid
         self._service_id = service_id
         self._expire_date = expire_date
         self._status_id = status_id
+        self._is_trial = is_trial
         self._order_uuid = order_uuid
         self._modify_date = modify_date
         self._modify_reason = modify_reason
@@ -44,6 +46,7 @@ class UserRRNService(object):
             'user_uuid': str(self._user_uuid),
             'service_id': self._service_id,
             'status_id': self._status_id,
+            'is_trial': self._is_trial,
             'expire_date': self._expire_date,
             'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
@@ -57,6 +60,7 @@ class UserRRNService(object):
             'user_uuid': str(self._user_uuid),
             'service_id': self._service_id,
             'status_id': self._status_id,
+            'is_trial': self._is_trial,
             'expire_date': self._expire_date,
             'order_uuid': str(self._order_uuid),
             'modify_date': self._modify_date,
@@ -71,11 +75,11 @@ class UserRRNServiceStored(StoredObject, UserRRNService):
     logger = logging.getLogger(__name__)
 
     def __init__(self, storage_service: StorageService, suuid: str = None, user_uuid: str = None, status_id: int = None,
-                 service_id: int = None, expire_date: datetime = None, order_uuid: str = None,
+                 service_id: int = None, expire_date: datetime = None, order_uuid: str = None, is_trial: bool = None,
                  modify_date: datetime = None, modify_reason: str = None, created_date: datetime = None,
                  limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
-        UserRRNService.__init__(self, suuid=suuid, user_uuid=user_uuid, service_id=service_id,
+        UserRRNService.__init__(self, suuid=suuid, user_uuid=user_uuid, service_id=service_id, is_trial=is_trial,
                                 expire_date=expire_date, modify_date=modify_date, modify_reason=modify_reason,
                                 order_uuid=order_uuid, created_date=created_date, status_id=status_id)
 
@@ -89,6 +93,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
     _user_uuid_field = 'user_uuid'
     _service_id_field = 'service_id'
     _status_id_field = 'status_id'
+    _is_trial_field = 'is_trial'
     _expire_date_field = 'expire_date'
     _order_uuid_field = 'order_uuid'
     _modify_date_field = 'modify_date'
@@ -106,6 +111,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
                         us.user_uuid AS user_uuid,
                         us.service_id AS service_id,
                         us.status_id AS status_id,
+                        us.is_trial AS is_trial,
                         to_json(us.expire_date) AS expire_date,
                         us.order_uuid AS order_uuid,
                         us.modify_reason AS modify_reason,
@@ -157,6 +163,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
                         us.user_uuid AS user_uuid,
                         us.service_id AS service_id,
                         us.status_id AS status_id,
+                        us.is_trial AS is_trial,
                         to_json(us.expire_date) AS expire_date,
                         us.order_uuid AS order_uuid,
                         us.modify_reason AS modify_reason,
@@ -193,9 +200,9 @@ class UserRRNServiceDB(UserRRNServiceStored):
         self.logger.info('UserRRNServiceDB create method')
         insert_sql = '''
                       INSERT INTO public.user_service
-                        (user_uuid, expire_date, service_id, order_uuid, status_id)
+                        (user_uuid, expire_date, service_id, order_uuid, is_trial, status_id)
                       VALUES 
-                        (?, ?, ?, ?, ?)
+                        (?, ?, ?, ?, ?, ?)
                       RETURNING uuid
                      '''
         insert_params = (
@@ -203,6 +210,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
             self._expire_date,
             self._service_id,
             self._order_uuid,
+            self._is_trial,
             self._status_id,
         )
         self.logger.debug('Create UserRRNServiceDB SQL : %s' % insert_sql)
@@ -240,6 +248,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
                         user_uuid = ?,
                         service_id = ?,
                         status_id = ?,
+                        is_trial = ?,
                         expire_date = ?,
                         order_uuid = ?,
                         modify_reason = ?
@@ -252,6 +261,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
             self._user_uuid,
             self._service_id,
             self._status_id,
+            self._is_trial,
             self._expire_date,
             self._order_uuid,
             self._modify_reason,
@@ -261,7 +271,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
         try:
             self.logger.debug(f"{self.__class__}: Call database service")
             self._storage_service.update(sql=update_sql, data=update_params)
-            self.logger.debug('User Subscription updated.')
+            self.logger.debug('User Service updated.')
         except DatabaseError as e:
             logging.error(e)
             try:
@@ -283,6 +293,7 @@ class UserRRNServiceDB(UserRRNServiceStored):
             user_uuid=user_service_db[self._user_uuid_field],
             service_id=user_service_db[self._service_id_field],
             status_id=user_service_db[self._status_id_field],
+            is_trial=user_service_db[self._is_trial_field],
             expire_date=user_service_db[self._expire_date_field],
             order_uuid=user_service_db[self._order_uuid_field],
             modify_date=user_service_db[self._modify_date_field],

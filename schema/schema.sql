@@ -61,6 +61,9 @@ CREATE TABLE public.service
   , price NUMERIC NOT NULL
   , old_price NUMERIC
   , billed_period INT
+  , is_free BOOLEAN DEFAULT FALSE
+  , is_trial BOOLEAN DEFAULT FALSE
+  , trial_period_days INT DEFAULT NULL
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'
   , created_date TIMESTAMP NOT NULL DEFAULT now()
@@ -93,6 +96,7 @@ CREATE TABLE public.user_service
   , service_id INT REFERENCES public.service(id) NOT NULL
   , order_uuid UUID REFERENCES public.order(uuid) NOT NULL
   , status_id INT REFERENCES public.user_service_status(id) NOT NULL
+  , is_trial BOOLEAN DEFAULT FALSE
   , expire_date TIMESTAMP
   , modify_date TIMESTAMP NOT NULL DEFAULT now()
   , modify_reason TEXT NOT NULL DEFAULT 'init'

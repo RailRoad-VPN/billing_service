@@ -21,12 +21,16 @@ class RRNService(object):
     _modify_date = None
     _modify_reason = None
     _created_date = None
+    _is_free = None
+    _is_trial = None
+    _trial_period_days = None
     _type_id = None
     _type_name = None
 
     def __init__(self, sid: int = None, service_name: str = None, description: str = None, price: int = None,
-                 old_price: int = None, billed_period: int = None, modify_date: datetime = None,
-                 modify_reason: str = None, created_date: datetime = None, type_id: int = None, type_name: str = None):
+                 old_price: int = None, billed_period: int = None, modify_date: datetime = None, is_trial: bool = None,
+                 trial_period_days: int = None, modify_reason: str = None, created_date: datetime = None,
+                 type_id: int = None, type_name: str = None, is_free: bool = None):
         self._sid = sid
         self._service_name = service_name
         self._description = description
@@ -36,6 +40,9 @@ class RRNService(object):
         self._modify_date = modify_date
         self._modify_reason = modify_reason
         self._created_date = created_date
+        self._is_free = is_free
+        self._is_trial = is_trial
+        self._trial_period_days = trial_period_days
         self._type_id = type_id
         self._type_name = type_name
 
@@ -50,6 +57,9 @@ class RRNService(object):
             'modify_date': self._modify_date,
             'modify_reason': self._modify_reason,
             'created_date': self._created_date,
+            'is_free': self._is_free,
+            'is_trial': self._is_trial,
+            'trial_period_days': self._trial_period_days,
             'type': {
                 'id': self._type_id,
                 'name': self._type_name,
@@ -64,6 +74,9 @@ class RRNService(object):
             'price': self._price,
             'old_price': self._old_price,
             'billed_period': self._billed_period,
+            'is_free': self._is_free,
+            'is_trial': self._is_trial,
+            'trial_period_days': self._trial_period_days,
             'type': {
                 'id': self._type_id,
                 'name': self._type_name,
@@ -76,14 +89,15 @@ class RRNServiceStored(StoredObject, RRNService):
 
     def __init__(self, storage_service: StorageService, sid: int = None, price: int = None,
                  old_price: int = None, billed_period: int = None, modify_date: datetime = None,
+                 is_trial: bool = None, trial_period_days: int = None, is_free: bool = None,
                  modify_reason: str = None, created_date: datetime = None, service_name: str = None,
                  description: str = None, type_id: int = None, type_name: str = None,
                  limit: int = None, offset: int = None, **kwargs):
         StoredObject.__init__(self, storage_service=storage_service, limit=limit, offset=offset)
         RRNService.__init__(self, sid=sid, price=price, old_price=old_price, type_id=type_id, type_name=type_name,
-                            billed_period=billed_period, modify_date=modify_date,
-                            modify_reason=modify_reason, created_date=created_date, service_name=service_name,
-                            description=description)
+                            billed_period=billed_period, modify_date=modify_date, is_trial=is_trial, is_free=is_free,
+                            trial_period_days=trial_period_days, modify_reason=modify_reason, created_date=created_date,
+                            service_name=service_name, description=description)
 
 
 class RRNServiceDB(RRNServiceStored):
@@ -98,6 +112,9 @@ class RRNServiceDB(RRNServiceStored):
     _modify_date_field = 'modify_date'
     _modify_reason_field = 'modify_reason'
     _created_date_field = 'created_date'
+    _is_free_field = 'is_free'
+    _is_trial_field = 'is_trial'
+    _trial_period_days_field = 'trial_period_days'
     _type_id_field = 'type_id'
     _type_name_field = 'type_name'
 
@@ -113,6 +130,9 @@ class RRNServiceDB(RRNServiceStored):
                       s.description             AS description,
                       s.price                   AS price,
                       s.old_price               AS old_price,
+                      s.is_free                 AS is_free,
+                      s.is_trial                AS is_trial,
+                      s.trial_period_days       AS trial_period_days,
                       s.billed_period           AS billed_period,
                       s.modify_date             AS modify_date,
                       s.modify_reason           AS modify_reason,
@@ -121,6 +141,7 @@ class RRNServiceDB(RRNServiceStored):
                       st.name                   AS type_name
                     FROM public.service s
                       JOIN public.service_type st ON s.type_id = st.id
+                    ORDER BY s.id ASC
         '''
         if self._limit:
             select_sql += "\nLIMIT %s\nOFFSET %s" % (self._limit, self._offset)
@@ -154,6 +175,9 @@ class RRNServiceDB(RRNServiceStored):
                       s.price                   AS price,
                       s.old_price               AS old_price,
                       s.billed_period           AS billed_period,
+                      s.is_free                 AS is_free,
+                      s.is_trial                AS is_trial,
+                      s.trial_period_days       AS trial_period_days,
                       s.modify_date             AS modify_date,
                       s.modify_reason           AS modify_reason,
                       s.created_date            AS created_date,
@@ -204,6 +228,9 @@ class RRNServiceDB(RRNServiceStored):
             price=service_db[self._price_field],
             old_price=service_db[self._old_price_field],
             billed_period=service_db[self._billed_period_field],
+            is_free=service_db[self._is_free_field],
+            is_trial=service_db[self._is_trial_field],
+            trial_period_days=service_db[self._trial_period_days_field],
             modify_date=service_db[self._modify_date_field],
             modify_reason=service_db[self._modify_reason_field],
             created_date=service_db[self._created_date_field],

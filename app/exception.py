@@ -48,6 +48,8 @@ class BillingError(APIErrorEnum):
     PAYMENT_UPDATE_ERROR_DB = (name + str(count()), 'PAYMENT_UPDATE_ERROR_DB phrase', 'PAYMENT_UPDATE_ERROR_DB description')
     PAYMENT_FIND_BY_ID_ERROR = (name + str(count()), 'PAYMENT_FIND_BY_ID_ERROR phrase', 'PAYMENT_FIND_BY_ID_ERROR description')
 
+    SERVICE_FIND_ERROR_DB = (name + str(count()), 'SERVICE_FIND_ERROR_DB phrase', 'SERVICE_FIND_ERROR_DB description')
+
     ORDER_CREATE_ERROR_DB = (name + str(count()), 'ORDER_CREATE_ERROR_DB phrase', 'ORDER_CREATE_ERROR_DB description')
     ORDER_UPDATE_ERROR_DB = (name + str(count()), 'ORDER_UPDATE_ERROR_DB phrase', 'ORDER_UPDATE_ERROR_DB description')
     ORDER_FIND_BY_CODE_ERROR = (name + str(count()), 'ORDER_FIND_BY_CODE_ERROR phrase', 'ORDER_FIND_BY_CODE_ERROR description')

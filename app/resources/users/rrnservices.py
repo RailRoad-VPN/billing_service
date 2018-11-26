@@ -55,13 +55,16 @@ class UserRRNServicesAPI(ResourceAPI):
         status_id = request_json.get(UserRRNServiceDB._status_id_field, None)
         expire_date = request_json.get(UserRRNServiceDB._expire_date_field, None)
         order_uuid = request_json.get(UserRRNServiceDB._order_uuid_field, None)
+        is_trial = request_json.get(UserRRNServiceDB._is_trial_field, None)
 
         try:
             req_fields = {
                 'user_uuid': user_uuid,
                 'status_id': status_id,
+                'expire_date': expire_date,
                 'service_id': service_id,
                 'order_uuid': order_uuid,
+                'is_trial': is_trial,
             }
         except TypeError:
             response_data = APIResponse(status=APIResponseStatus.failed.status, code=HTTPStatus.BAD_REQUEST)
@@ -76,7 +79,7 @@ class UserRRNServicesAPI(ResourceAPI):
             return resp
 
         user_service_db = UserRRNServiceDB(storage_service=self.__db_storage_service, user_uuid=user_uuid,
-                                           status_id=status_id, service_id=service_id,
+                                           status_id=status_id, service_id=service_id, is_trial=is_trial,
                                            expire_date=expire_date, order_uuid=order_uuid)
 
         try:
@@ -112,6 +115,7 @@ class UserRRNServicesAPI(ResourceAPI):
         status_id = request_json.get(UserRRNServiceDB._status_id_field, None)
         expire_date = request_json.get(UserRRNServiceDB._expire_date_field, None)
         order_uuid = request_json.get(UserRRNServiceDB._order_uuid_field, None)
+        is_trial = request_json.get(UserRRNServiceDB._is_trial_field, None)
         modify_reason = request_json.get(UserRRNServiceDB._modify_reason_field, None)
 
         req_fields = {
@@ -120,6 +124,7 @@ class UserRRNServicesAPI(ResourceAPI):
             'status_id': status_id,
             'expire_date': expire_date,
             'order_uuid': order_uuid,
+            'is_trial': is_trial,
             'modify_reason': modify_reason,
         }
 
@@ -131,7 +136,7 @@ class UserRRNServicesAPI(ResourceAPI):
             return resp
 
         user_service_db = UserRRNServiceDB(storage_service=self.__db_storage_service, suuid=us_uuid,
-                                           user_uuid=user_uuid, service_id=service_id,
+                                           user_uuid=user_uuid, service_id=service_id, is_trial=is_trial,
                                            expire_date=expire_date, order_uuid=order_uuid,
                                            modify_reason=modify_reason, status_id=status_id)
         try:
