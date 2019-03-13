@@ -12,10 +12,9 @@ sys.path.insert(0, '../psql_library')
 from storage_service import DBStorageService
 
 sys.path.insert(0, '../rest_api_library')
-from api import ResourceAPI
+from api import ResourceAPI, APIResourceURL
 from response import APIResponseStatus, APIResponse
 from response import make_api_response, make_error_request_response
-from rest import APIResourceURL
 
 
 class RRNServicesAPI(ResourceAPI):
