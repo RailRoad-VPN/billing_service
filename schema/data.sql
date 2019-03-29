@@ -13,7 +13,7 @@ INSERT INTO public.service_type (id, name) VALUES (1, 'VPN Subscription');
 -- FREE VPN SUBSCRIPTION
 INSERT INTO public.service (id, name, price, old_price, billed_period, type_id, is_free, is_trial, trial_period_days) VALUES (1, 'Free VPN Pack', 0.00, 0.00, 1, 1, TRUE, FALSE, NULL);
 -- PAID VPN SUBSCRIPTION
-INSERT INTO public.service (id, name, price, old_price, billed_period, type_id, is_free, is_trial, trial_period_days) VALUES (2, 'VPN Pack', 3.00, 4.00, 1, 1, FALSE, TRUE, 3);
+-- INSERT INTO public.service (id, name, price, old_price, billed_period, type_id, is_free, is_trial, trial_period_days) VALUES (2, 'VPN Pack', 3.00, 4.00, 1, 1, FALSE, TRUE, 3);
 
 INSERT INTO public.order_status (id, name) VALUES (1, 'new');
 INSERT INTO public.order_status (id, name) VALUES (2, 'processing');
